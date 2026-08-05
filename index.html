@@ -350,6 +350,11 @@ ons(qry(col(db,'citas'), ob('fecha'), ob('hora')), snap => {
   citas = snap.docs.map(d=>({id:d.id,...d.data()}));
   citasLoaded = true;
   renderAll();
+}, err => {
+  console.error('Firestore error:', err);
+  citasLoaded = true;
+  renderAll();
+  showToast('Error al conectar con Firebase: ' + err.code);
 });
 
 // ─── MODO ─────────────────────────────────────────────────────────
@@ -640,12 +645,6 @@ window.eliminarCita = async function(id){
 // ════════════════════════════════════════════════════════════════
 function renderCliente() {
   const root=document.getElementById('appRoot');
-
-  // Mostrar loading mientras Firebase carga
-  if(!citasLoaded){
-    root.innerHTML='<div class="loading-screen"><div class="spinner"></div><p>Cargando agenda...</p></div>';
-    return;
-  }
 
   const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
 
