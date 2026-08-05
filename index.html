@@ -722,7 +722,13 @@ window.clienteSelHoraFn = function(h) {
   clienteSelHora=h; clienteSelServicio=null; renderCliente();
   setTimeout(()=>document.querySelector('.reserva-form')?.scrollIntoView({behavior:'smooth'}),100);
 };
-window.clienteSelServicioFn = function(s) { clienteSelServicio=s; renderCliente(); };
+window.clienteSelServicioFn = function(s) {
+  clienteSelServicio=s;
+  // Solo actualizar los pills sin re-renderizar el formulario completo
+  document.querySelectorAll('.servicio-pill').forEach(el => {
+    el.classList.toggle('selected', el.textContent.trim() === s);
+  });
+};
 
 window.confirmarReserva = async function() {
   const nombre=document.getElementById('cNombre')?.value.trim();
