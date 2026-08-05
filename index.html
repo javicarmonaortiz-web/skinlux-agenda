@@ -279,6 +279,10 @@ header {
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("A89FvqhG00KPy4fXk");</script>
+
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -778,11 +782,20 @@ window.confirmarReserva = async function() {
   const hora=horaGuardada;
   const servicio=servicioGuardado;
 
-  // Email a Javi
-  const emailSubject=encodeURIComponent('Nueva reserva Skin Lux — '+nombre);
-  const emailBody=encodeURIComponent('Hola Javi!\n\nTienes una nueva cita reservada:\n\nCliente: '+nombre+'\nTeléfono: '+(tel||'No indicado')+'\nFecha: '+fechaStr+'\nHora: '+hora+'\nServicio: '+servicio+'\n\nRevisa tu agenda en: https://stellar-heliotrope-6f2c74.netlify.app');
-  const mailtoLink='mailto:javicarmonaortiz@gmail.com?subject='+emailSubject+'&body='+emailBody;
-  window.open(mailtoLink,'_blank');
+  // Email automático a Javi via EmailJS
+  emailjs.send("service_z91ickp", "template_smf6n3r", {
+    nombre: nombre,
+    telefono: tel || "No indicado",
+    fecha: fechaStr,
+    hora: hora,
+    servicio: servicio,
+    name: nombre,
+    email: "javicarmonaortiz@gmail.com"
+  }).then(() => {
+    console.log("Email enviado a Javi");
+  }).catch(err => {
+    console.error("Error email:", err);
+  });
 
   // WhatsApp al cliente
   if(tel){
