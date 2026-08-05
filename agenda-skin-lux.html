@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda · SKIN LUX by Javiera</title>
+<style>
+:root {
+  --rose: #C97B84; --rose-light: #F4DDE0; --rose-dark: #8B4F57;
+  --gold: #C9A96E; --gold-light: #F5EDDB;
+  --cream: #FAF7F4; --cream-dark: #F0EBE4;
+  --text: #2C1F20; --text-soft: #7A5C60; --text-muted: #B89FA2;
+  --white: #FFFFFF; --border: #E8D8DA; --radius: 12px;
+  --shadow: 0 2px 12px rgba(44,31,32,0.07);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 15px; }
+
+header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem; display: flex; align-items: center;
+  justify-content: space-between; position: sticky; top: 0; z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 36px; height: 36px; background: var(--rose-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--rose-dark); }
+.logo-text { font-size: 14px; font-family: 'Georgia', serif; color: var(--text-soft); letter-spacing: 0.04em; line-height: 1.2; }
+.logo-text strong { display: block; font-size: 16px; color: var(--text); font-weight: normal; letter-spacing: 0.06em; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.mode-badge { font-size: 11px; font-family: sans-serif; padding: 4px 10px; border-radius: 20px; }
+.mode-badge.admin { background: var(--rose-light); color: var(--rose-dark); }
+.mode-badge.cliente { background: var(--gold-light); color: #7A5A00; }
+.btn { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); color: var(--text); font-size: 13px; font-family: 'Georgia', serif; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.btn:hover { background: var(--cream-dark); border-color: var(--rose); }
+.btn-primary { background: var(--rose); color: var(--white); border-color: var(--rose); }
+.btn-primary:hover { background: var(--rose-dark); border-color: var(--rose-dark); }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+/* LOADING */
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; gap: 12px; color: var(--text-muted); font-family: sans-serif; font-size: 13px; }
+.spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--rose); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* LAYOUT ADMIN */
+.app { display: grid; grid-template-columns: 270px 1fr; min-height: calc(100vh - 65px); }
+.sidebar { background: var(--white); border-right: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
+.main { padding: 1.5rem; overflow-y: auto; }
+.main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.fecha-title { font-size: 20px; color: var(--text); font-weight: normal; }
+.fecha-subtitle { font-size: 13px; color: var(--text-muted); font-family: sans-serif; margin-top: 2px; }
+.view-tabs { display: flex; gap: 4px; background: var(--cream-dark); border-radius: 8px; padding: 3px; }
+.view-tab { padding: 5px 14px; border-radius: 6px; border: none; background: none; font-size: 12px; font-family: sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+.view-tab.active { background: var(--white); color: var(--rose-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* MINI CAL */
+.mini-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.mini-cal-title { font-size: 12px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; font-family: sans-serif; }
+.mini-nav button { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 2px 5px; border-radius: 4px; }
+.mini-nav button:hover { color: var(--rose); }
+.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.mini-grid .day-label { font-size: 10px; color: var(--text-muted); font-family: sans-serif; padding: 3px 0; font-weight: 600; }
+.mini-day { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: sans-serif; border-radius: 50%; cursor: pointer; color: var(--text-soft); transition: background 0.1s; margin: auto; }
+.mini-day:hover { background: var(--rose-light); color: var(--rose-dark); }
+.mini-day.today { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
+.mini-day.selected { background: var(--rose); color: white; }
+.mini-day.no-atiende { color: var(--border); cursor: default; }
+.mini-day.no-atiende:hover { background: none; color: var(--border); }
+.mini-day.has-cita { position: relative; }
+.mini-day.has-cita::after { content: ''; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+.mini-day.empty { cursor: default; }
+
+/* STATS */
+.section-title { font-size: 11px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat-card { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
+.stat-number { font-size: 20px; color: var(--rose-dark); line-height: 1.1; }
+.stat-label { font-size: 10px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+
+/* UPCOMING */
+.upcoming-list { display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; }
+.upcoming-item { background: var(--cream); border-radius: 8px; padding: 8px 10px; border-left: 3px solid var(--rose-light); cursor: pointer; transition: border-color 0.15s; }
+.upcoming-item:hover { border-color: var(--rose); }
+.up-hora { font-size: 11px; color: var(--rose); font-family: sans-serif; font-weight: 600; }
+.up-nombre { font-size: 13px; color: var(--text); }
+.up-servicio { font-size: 11px; color: var(--text-muted); font-family: sans-serif; }
+
+/* TURNO BANNER */
+.turno-banner { border-radius: 10px; padding: 12px 16px; margin-bottom: 1rem; font-family: sans-serif; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+.turno-banner.dia { background: #FEF3E2; color: #8A5A00; border: 1px solid #F7C975; }
+.turno-banner.noche { background: #EEF0FB; color: #3A3F8A; border: 1px solid #B0B8E8; }
+.turno-banner.saliente { background: #E8F5EE; color: #2A6845; border: 1px solid #90D4AE; }
+.turno-banner.libre { background: var(--rose-light); color: var(--rose-dark); border: 1px solid var(--rose); }
+
+/* SCHEDULE */
+.schedule-grid { display: flex; flex-direction: column; gap: 2px; }
+.time-slot { display: flex; gap: 12px; min-height: 56px; }
+.time-label { width: 48px; font-size: 11px; color: var(--text-muted); font-family: sans-serif; padding-top: 6px; text-align: right; flex-shrink: 0; }
+.slot-area { flex: 1; border-top: 1px solid var(--border); padding: 4px 0; cursor: pointer; transition: background 0.1s; border-radius: 4px; }
+.slot-area:hover { background: var(--rose-light); }
+.slot-area.has-cita { cursor: default; background: transparent; }
+.slot-area.has-cita:hover { background: transparent; }
+.cita-block { background: var(--rose-light); border-left: 3px solid var(--rose); border-radius: 6px; padding: 8px 12px; margin: 0 4px; cursor: pointer; transition: box-shadow 0.15s; position: relative; }
+.cita-block:hover { box-shadow: var(--shadow); }
+.cita-block.gold { background: var(--gold-light); border-color: var(--gold); }
+.cita-nombre { font-size: 13px; color: var(--text); }
+.cita-servicio { font-size: 11px; color: var(--text-soft); font-family: sans-serif; margin-top: 2px; }
+.cita-tel { font-size: 11px; color: var(--text-muted); font-family: sans-serif; }
+.cita-actions { position: absolute; bottom: 6px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s; }
+.cita-block:hover .cita-actions { opacity: 1; }
+.cita-actions button { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.1s; }
+.cita-actions button:hover { background: var(--rose); color: white; border-color: var(--rose); }
+.cita-actions button.del:hover { background: #e74c3c; border-color: #e74c3c; }
+
+/* WEEK */
+.week-grid { display: grid; grid-template-columns: 46px repeat(7, 1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.week-header { background: var(--cream-dark); padding: 8px 4px; text-align: center; border-bottom: 1px solid var(--border); font-size: 11px; font-family: sans-serif; color: var(--text-muted); line-height: 1.4; }
+.week-header.today-col { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
+.week-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 40px; padding: 2px; cursor: pointer; transition: background 0.1s; }
+.week-cell:hover { background: var(--cream); }
+.week-cell.time-col { background: var(--cream-dark); cursor: default; font-size: 10px; font-family: sans-serif; color: var(--text-muted); text-align: right; padding: 4px 5px; display: flex; align-items: flex-start; justify-content: flex-end; }
+.week-cell.time-col:hover { background: var(--cream-dark); }
+.week-cell.bloqueada { background: var(--cream-dark); cursor: not-allowed; opacity: 0.4; }
+.week-cell.bloqueada:hover { background: var(--cream-dark); }
+.week-cita { background: var(--rose-light); border-left: 2px solid var(--rose); border-radius: 3px; padding: 2px 4px; font-size: 10px; font-family: sans-serif; color: var(--rose-dark); overflow: hidden; cursor: pointer; }
+
+/* NO ATIENDE */
+.no-atiende-full { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem; text-align: center; gap: 8px; color: var(--text-muted); font-family: sans-serif; }
+.no-atiende-full .icon { font-size: 36px; margin-bottom: 6px; }
+
+/* ── VISTA CLIENTE ── */
+.cliente-wrap { max-width: 520px; margin: 0 auto; padding: 2rem 1rem; }
+.cliente-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.cliente-cal-nav h2 { font-size: 18px; font-weight: normal; color: var(--text); }
+.cliente-cal-nav button { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; padding: 4px 10px; border-radius: 6px; transition: color 0.1s; }
+.cliente-cal-nav button:hover { color: var(--rose); }
+.cal-semana { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 1.5rem; }
+.cal-semana .dl { font-size: 10px; color: var(--text-muted); font-family: sans-serif; text-align: center; font-weight: 600; padding-bottom: 4px; }
+.cal-dia { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.15s; }
+.cal-dia:hover { background: var(--rose-light); color: var(--rose-dark); }
+.cal-dia.hoy { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
+.cal-dia.sel { background: var(--rose); color: white; }
+.cal-dia.sin-agenda { color: var(--border); cursor: default; }
+.cal-dia.sin-agenda:hover { background: none; color: var(--border); }
+.cal-dia.con-disponibles { position: relative; }
+.cal-dia.con-disponibles::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--rose); border-radius: 50%; }
+.cal-dia.empty-c { cursor: default; }
+
+.cliente-day-title { font-size: 16px; color: var(--text); margin-bottom: 12px; }
+.horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
+.hora-btn { padding: 12px 8px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--white); font-size: 15px; font-family: 'Georgia', serif; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
+.hora-btn:hover { border-color: var(--rose); background: var(--rose-light); color: var(--rose-dark); }
+.hora-btn.ocupada { background: var(--cream-dark); color: var(--text-muted); cursor: not-allowed; font-size: 13px; text-decoration: line-through; }
+.hora-btn.ocupada:hover { border-color: var(--border); background: var(--cream-dark); color: var(--text-muted); }
+.hora-btn.mi-cita { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); font-weight: 600; }
+
+.mi-cita-card { background: var(--rose-light); border: 1.5px solid var(--rose); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.mi-cita-card h3 { font-size: 14px; color: var(--rose-dark); font-weight: normal; margin-bottom: 8px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
+.mi-cita-card p { font-size: 14px; color: var(--text); margin-bottom: 4px; }
+.mi-cita-card .cancel-btn { margin-top: 10px; width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid var(--rose); background: white; color: var(--rose-dark); font-family: sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.mi-cita-card .cancel-btn:hover { background: var(--rose); color: white; }
+
+/* FORMULARIO RESERVA */
+.reserva-form { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; margin-top: 1rem; }
+.reserva-form h3 { font-size: 15px; font-weight: normal; color: var(--text); margin-bottom: 1rem; }
+.form-group { margin-bottom: 12px; }
+.form-label { font-size: 11px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
+.form-input, .form-select { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Georgia', serif; color: var(--text); background: var(--white); outline: none; transition: border-color 0.15s; }
+.form-input:focus, .form-select:focus { border-color: var(--rose); }
+.servicios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 4px; }
+.servicio-pill { padding: 7px 10px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 12px; font-family: sans-serif; cursor: pointer; text-align: center; color: var(--text-soft); transition: all 0.15s; background: var(--white); }
+.servicio-pill:hover, .servicio-pill.selected { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); }
+
+/* MODAL ADMIN */
+.modal-overlay { position: fixed; inset: 0; background: rgba(44,31,32,0.4); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay.hidden { display: none; }
+.modal { background: var(--white); border-radius: var(--radius); padding: 1.75rem; width: 100%; max-width: 420px; box-shadow: 0 8px 32px rgba(44,31,32,0.15); max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 17px; color: var(--text); margin-bottom: 1rem; font-weight: normal; }
+.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; }
+.hora-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.hora-pill { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.15s; background: var(--white); }
+.hora-pill:hover, .hora-pill.selected { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); }
+.hora-pill.ocupada { background: var(--cream-dark); color: var(--text-muted); cursor: not-allowed; text-decoration: line-through; }
+.hora-pill.ocupada:hover { background: var(--cream-dark); border-color: var(--border); color: var(--text-muted); }
+
+/* LOGIN */
+.login-wrap { max-width: 340px; margin: 4rem auto; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 2rem; text-align: center; }
+.login-wrap h2 { font-size: 18px; font-weight: normal; margin-bottom: 6px; }
+.login-wrap p { font-size: 13px; color: var(--text-muted); font-family: sans-serif; margin-bottom: 1.25rem; }
+.pin-inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 1rem; }
+.pin-inputs input { width: 44px; height: 52px; text-align: center; font-size: 22px; font-family: 'Georgia', serif; border: 1.5px solid var(--border); border-radius: 8px; outline: none; transition: border-color 0.15s; }
+.pin-inputs input:focus { border-color: var(--rose); }
+.login-err { font-size: 12px; color: #e74c3c; font-family: sans-serif; margin-bottom: 8px; min-height: 16px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--text); color: var(--white); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-family: sans-serif; z-index: 300; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
+.toast.show { transform: translateY(0); opacity: 1; }
+
+@media (max-width: 680px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .horas-grid { grid-template-columns: repeat(2, 1fr); }
+  .servicios-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">✦</div>
+    <div class="logo-text"><strong>SKIN LUX</strong>by Javiera</div>
+  </div>
+  <div class="header-right">
+    <span class="mode-badge" id="modeBadge"></span>
+    <button class="btn btn-sm" id="btnModo" onclick="toggleModo()"></button>
+  </div>
+</header>
+
+<div id="appRoot"></div>
+<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitulo">Nueva cita</div>
+    <div class="form-group">
+      <label class="form-label">Servicio</label>
+      <div class="servicios-grid" id="adminServiciosGrid"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Nombre cliente</label>
+      <input class="form-input" id="fNombre" type="text" placeholder="Nombre completo" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Teléfono</label>
+      <input class="form-input" id="fTelefono" type="tel" placeholder="+56 9 ...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Fecha</label>
+      <input class="form-input" id="fFecha" type="date" onchange="actualizarHorasModal()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Hora</label>
+      <div class="hora-options" id="horaOptions"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notas</label>
+      <input class="form-input" id="fNotas" type="text" placeholder="Indicaciones, alergias, etc.">
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="guardarCitaAdmin()">Guardar</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCkxmV_LhuuEvUwNhNhiiOfnUNWBDw1-b0",
+  authDomain: "skinlux-agenda.firebaseapp.com",
+  projectId: "skinlux-agenda",
+  storageBucket: "skinlux-agenda.firebasestorage.app",
+  messagingSenderId: "361386858959",
+  appId: "1:361386858959:web:12f9a3dae558e7a12b5aba"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window._db = db;
+window._fbMod = { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDocs };
+
+// ─── CONSTANTES ──────────────────────────────────────────────────
+const CICLO_INICIO = new Date(2026, 7, 5);
+const CICLO = [
+  { nombre: 'Turno día',      tipo: 'dia',      horas: [] },
+  { nombre: 'Turno noche',    tipo: 'noche',    horas: ['11:00','13:00','15:00'] },
+  { nombre: 'Saliente noche', tipo: 'saliente', horas: ['15:00','17:00','19:00'] },
+  { nombre: 'Libre',          tipo: 'libre',    horas: ['11:00','13:00','15:00','17:00','19:00','21:00'] },
+];
+const TURNO_ICONS = { dia:'🌞', noche:'🌙', saliente:'🌅', libre:'✨' };
+const SERVICIOS = [
+  {nombre:'Facial',duracion:60,color:'rose'},{nombre:'Limpieza',duracion:45,color:'rose'},
+  {nombre:'Hidratación',duracion:60,color:'rose'},{nombre:'Mesoterapia',duracion:75,color:'gold'},
+  {nombre:'Dermapen',duracion:60,color:'gold'},{nombre:'Peeling',duracion:45,color:'rose'},
+  {nombre:'Botox',duracion:30,color:'gold'},{nombre:'Depilación',duracion:30,color:'rose'},
+  {nombre:'Otro',duracion:30,color:'rose'},
+];
+const DIAS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_CAP = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const ADMIN_PIN = '1234'; // ← CAMBIA ESTE PIN
+
+// ─── ESTADO ──────────────────────────────────────────────────────
+let modo = 'cliente'; // 'admin' | 'cliente'
+let adminAuth = false;
+let today = new Date(); today.setHours(0,0,0,0);
+let selectedDate = new Date(today);
+let calViewDate = new Date(today.getFullYear(), today.getMonth(), 1);
+let currentView = 'dia';
+let citas = [];
+let editId = null;
+let selServicioAdmin = null;
+let selHoraAdmin = null;
+// cliente
+let clienteSelFecha = new Date(today);
+let clienteCalView = new Date(today.getFullYear(), today.getMonth(), 1);
+let clienteSelHora = null;
+let clienteSelServicio = null;
+let miCitaId = localStorage.getItem('skinlux_mi_cita') || null;
+
+// ─── HELPERS ─────────────────────────────────────────────────────
+function getTurno(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const ref = new Date(CICLO_INICIO.getFullYear(), CICLO_INICIO.getMonth(), CICLO_INICIO.getDate());
+  const diff = Math.round((d - ref) / 86400000);
+  return CICLO[((diff % 4) + 4) % 4];
+}
+function dateStr(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800);
+}
+window.showToast = showToast;
+
+// ─── FIRESTORE LISTENER ──────────────────────────────────────────
+const { collection:col, onSnapshot:ons, query:qry, orderBy:ob } = window._fbMod;
+ons(qry(col(db,'citas'), ob('fecha'), ob('hora')), snap => {
+  citas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  renderAll();
+});
+
+// ─── MODO ─────────────────────────────────────────────────────────
+window.toggleModo = function() {
+  if(modo==='cliente') { showLogin(); }
+  else { modo='cliente'; adminAuth=false; updateHeader(); renderAll(); }
+};
+function updateHeader() {
+  const badge=document.getElementById('modeBadge');
+  const btn=document.getElementById('btnModo');
+  if(modo==='admin'){ badge.textContent='Admin'; badge.className='mode-badge admin'; btn.textContent='Salir'; }
+  else { badge.textContent='Vista cliente'; badge.className='mode-badge cliente'; btn.textContent='Admin'; }
+}
+updateHeader();
+
+// ─── LOGIN ───────────────────────────────────────────────────────
+function showLogin() {
+  const root=document.getElementById('appRoot');
+  root.innerHTML=`<div class="login-wrap">
+    <h2>Acceso administrador</h2>
+    <p>Ingresa el PIN de Javi</p>
+    <div class="pin-inputs">
+      <input type="password" maxlength="1" id="p0" oninput="pinNext(0)" inputmode="numeric">
+      <input type="password" maxlength="1" id="p1" oninput="pinNext(1)" inputmode="numeric">
+      <input type="password" maxlength="1" id="p2" oninput="pinNext(2)" inputmode="numeric">
+      <input type="password" maxlength="1" id="p3" oninput="pinNext(3)" inputmode="numeric">
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <button class="btn btn-primary" style="width:100%" onclick="checkPin()">Entrar</button>
+  </div>`;
+  setTimeout(()=>document.getElementById('p0').focus(),100);
+}
+window.pinNext = function(i) {
+  const val=document.getElementById('p'+i).value;
+  if(val&&i<3) document.getElementById('p'+(i+1)).focus();
+  if(i===3&&val) checkPin();
+};
+window.checkPin = function() {
+  const pin=[0,1,2,3].map(i=>document.getElementById('p'+i)?.value||'').join('');
+  if(pin===ADMIN_PIN){ modo='admin'; adminAuth=true; updateHeader(); renderAll(); }
+  else { document.getElementById('loginErr').textContent='PIN incorrecto'; }
+};
+
+// ─── RENDER PRINCIPAL ────────────────────────────────────────────
+window.renderAll = function() {
+  if(modo==='admin') renderAdmin();
+  else renderCliente();
+};
+
+// ════════════════════════════════════════════════════════════════
+// VISTA ADMIN
+// ════════════════════════════════════════════════════════════════
+function renderAdmin() {
+  const root=document.getElementById('appRoot');
+  root.innerHTML=`
+  <div class="app">
+    <aside class="sidebar">
+      <div>
+        <div class="mini-cal-header">
+          <span class="mini-cal-title" id="miniCalTitle"></span>
+          <div class="mini-nav">
+            <button onclick="cambiarMes(-1)">‹</button>
+            <button onclick="cambiarMes(1)">›</button>
+          </div>
+        </div>
+        <div class="mini-grid" id="miniGrid"></div>
+      </div>
+      <div>
+        <div class="section-title">Este mes</div>
+        <div class="stats">
+          <div class="stat-card"><div class="stat-number" id="statMes">0</div><div class="stat-label">Citas</div></div>
+          <div class="stat-card"><div class="stat-number" id="statHoy">0</div><div class="stat-label">Hoy</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">Próximas citas</div>
+        <div class="upcoming-list" id="upcomingList"></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="main-header">
+        <div>
+          <div class="fecha-title" id="fechaTitle"></div>
+          <div class="fecha-subtitle" id="fechaSubtitle"></div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-primary btn-sm" onclick="openModalAdmin()">+ Nueva cita</button>
+          <div class="view-tabs">
+            <button class="view-tab ${currentView==='dia'?'active':''}" onclick="setView('dia')">Día</button>
+            <button class="view-tab ${currentView==='semana'?'active':''}" onclick="setView('semana')">Semana</button>
+          </div>
+        </div>
+      </div>
+      <div id="vistaDia" style="${currentView==='dia'?'':'display:none'}"></div>
+      <div id="vistaSemana" style="${currentView==='semana'?'':'display:none'}"></div>
+    </main>
+  </div>`;
+  renderMiniCal(); renderStats(); renderUpcoming();
+  if(currentView==='dia') renderDia(); else renderSemana();
+}
+
+window.setView = function(v) { currentView=v; renderAdmin(); };
+window.cambiarMes = function(dir) { calViewDate.setMonth(calViewDate.getMonth()+dir); renderMiniCal(); };
+
+function renderMiniCal() {
+  const el=document.getElementById('miniCalTitle'); if(!el) return;
+  const year=calViewDate.getFullYear(), month=calViewDate.getMonth();
+  el.textContent=MESES_CAP[month]+' '+year;
+  const grid=document.getElementById('miniGrid'); grid.innerHTML='';
+  ['L','M','M','J','V','S','D'].forEach(d=>{const e=document.createElement('div');e.className='day-label';e.textContent=d;grid.appendChild(e);});
+  const firstDay=new Date(year,month,1);
+  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
+  const dim=new Date(year,month+1,0).getDate();
+  const tStr=dateStr(today), sStr=dateStr(selectedDate);
+  for(let i=0;i<startDow;i++){const e=document.createElement('div');e.className='mini-day empty';grid.appendChild(e);}
+  for(let d=1;d<=dim;d++){
+    const dStr2=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dt=new Date(year,month,d); const turno=getTurno(dt);
+    const e=document.createElement('div'); e.className='mini-day'; e.textContent=d;
+    if(dStr2===tStr) e.classList.add('today');
+    if(dStr2===sStr) e.classList.add('selected');
+    if(turno.tipo==='dia') e.classList.add('no-atiende');
+    if(citas.some(c=>c.fecha===dStr2)) e.classList.add('has-cita');
+    if(turno.tipo!=='dia') e.onclick=()=>{selectedDate=new Date(year,month,d);renderAdmin();};
+    grid.appendChild(e);
+  }
+}
+function renderStats() {
+  const mes=selectedDate.getMonth(), anio=selectedDate.getFullYear();
+  const sm=document.getElementById('statMes'), sh=document.getElementById('statHoy');
+  if(!sm) return;
+  sm.textContent=citas.filter(c=>{const d=parseDate(c.fecha);return d.getMonth()===mes&&d.getFullYear()===anio;}).length;
+  sh.textContent=citas.filter(c=>c.fecha===dateStr(selectedDate)).length;
+}
+function renderUpcoming() {
+  const ul=document.getElementById('upcomingList'); if(!ul) return;
+  const tStr=dateStr(today);
+  const prox=citas.filter(c=>c.fecha>=tStr).slice(0,6);
+  ul.innerHTML='';
+  if(!prox.length){ul.innerHTML='<div style="font-size:12px;color:var(--text-muted);font-family:sans-serif;text-align:center;padding:10px 0">Sin citas próximas</div>';return;}
+  prox.forEach(c=>{
+    const d=parseDate(c.fecha); const dStr2=dateStr(d);
+    const lbl=dStr2===tStr?'Hoy':DIAS_ES[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);
+    const el=document.createElement('div'); el.className='upcoming-item';
+    el.innerHTML=`<div class="up-hora">${lbl} · ${c.hora}</div><div class="up-nombre">${c.nombre}</div><div class="up-servicio">${c.servicio}</div>`;
+    el.onclick=()=>{selectedDate=new Date(d);currentView='dia';renderAdmin();};
+    ul.appendChild(el);
+  });
+}
+
+function renderDia() {
+  const dStr=dateStr(selectedDate);
+  const turno=getTurno(selectedDate);
+  const citasHoy=citas.filter(c=>c.fecha===dStr);
+  const dow=DIAS_ES[selectedDate.getDay()];
+  document.getElementById('fechaTitle').textContent=dow+', '+selectedDate.getDate()+' de '+MESES_ES[selectedDate.getMonth()]+' de '+selectedDate.getFullYear();
+  document.getElementById('fechaSubtitle').textContent=turno.tipo==='dia'?turno.nombre+' — sin atención':turno.nombre+' · '+turno.horas.length+' horarios';
+  const cont=document.getElementById('vistaDia'); cont.innerHTML='';
+  const msgs={dia:'Javi tiene <strong>turno día</strong> en el hospital — sin atención Skin Lux.',noche:'Javi tiene <strong>turno noche</strong> — atiende antes de entrar al turno.',saliente:'Javi <strong>sale de turno noche</strong> — atiende en la tarde.',libre:'Javi está <strong>libre</strong> — disponible todo el día.'};
+  cont.innerHTML+=`<div class="turno-banner ${turno.tipo}"><span style="font-size:18px">${TURNO_ICONS[turno.tipo]}</span><span>${msgs[turno.tipo]}</span></div>`;
+  if(turno.tipo==='dia'){cont.innerHTML+=`<div class="no-atiende-full"><div class="icon">🏥</div><p>Sin atención hoy.</p></div>`;return;}
+  const grid=document.createElement('div'); grid.className='schedule-grid';
+  turno.horas.forEach(hora=>{
+    const slot=document.createElement('div'); slot.className='time-slot';
+    const lbl=document.createElement('div'); lbl.className='time-label'; lbl.textContent=hora;
+    slot.appendChild(lbl);
+    const area=document.createElement('div'); area.className='slot-area';
+    const cita=citasHoy.find(c=>c.hora===hora);
+    if(cita){
+      area.classList.add('has-cita');
+      const serv=SERVICIOS.find(s=>s.nombre===cita.servicio)||SERVICIOS[0];
+      const block=document.createElement('div');
+      block.className='cita-block'+(serv.color==='gold'?' gold':'');
+      block.innerHTML=`<div class="cita-nombre">${cita.nombre}</div><div class="cita-servicio">${cita.servicio}</div>${cita.telefono?`<div class="cita-tel">${cita.telefono}</div>`:''}<div class="cita-actions"><button onclick="editarCitaAdmin('${cita.id}')">Editar</button><button class="del" onclick="eliminarCita('${cita.id}')">Eliminar</button></div>`;
+      area.appendChild(block);
+    } else {
+      area.onclick=()=>openModalAdmin(hora);
+    }
+    slot.appendChild(area); grid.appendChild(slot);
+  });
+  cont.appendChild(grid);
+}
+
+function renderSemana() {
+  const dow=selectedDate.getDay(); const diffLun=dow===0?-6:1-dow;
+  const lunes=new Date(selectedDate); lunes.setDate(selectedDate.getDate()+diffLun);
+  const dias=[]; for(let i=0;i<7;i++){const d=new Date(lunes);d.setDate(lunes.getDate()+i);dias.push(d);}
+  const todasHoras=new Set(); dias.forEach(d=>getTurno(d).horas.forEach(h=>todasHoras.add(h)));
+  const horasOrd=[...todasHoras].sort();
+  const tStr=dateStr(today);
+  const grid=document.getElementById('vistaSemana'); grid.innerHTML='';
+  const wg=document.createElement('div'); wg.className='week-grid'; grid.appendChild(wg);
+  const corner=document.createElement('div'); corner.className='week-header'; wg.appendChild(corner);
+  dias.forEach(d=>{const h=document.createElement('div');const dStr2=dateStr(d);const t=getTurno(d);h.className='week-header'+(dStr2===tStr?' today-col':'');h.innerHTML=DIAS_ES[d.getDay()]+'<br><strong style="font-size:13px">'+d.getDate()+'</strong><br><span style="font-size:10px">'+TURNO_ICONS[t.tipo]+'</span>';wg.appendChild(h);});
+  horasOrd.forEach(hora=>{
+    const tl=document.createElement('div'); tl.className='week-cell time-col'; tl.textContent=hora; wg.appendChild(tl);
+    dias.forEach(d=>{
+      const cell=document.createElement('div'); cell.className='week-cell';
+      const dStr2=dateStr(d); const turno=getTurno(d);
+      if(!turno.horas.includes(hora)){cell.classList.add('bloqueada');}
+      else {
+        const cita=citas.find(c=>c.fecha===dStr2&&c.hora===hora);
+        if(cita){const b=document.createElement('div');b.className='week-cita';b.textContent=cita.nombre;b.title=cita.servicio;b.onclick=e=>{e.stopPropagation();editarCitaAdmin(cita.id);};cell.appendChild(b);}
+        else{cell.onclick=()=>{selectedDate=new Date(d);currentView='dia';openModalAdmin(hora);};}
+      }
+      wg.appendChild(cell);
+    });
+  });
+  const fin=dias[6];
+  document.getElementById('fechaTitle').textContent=lunes.getDate()+' '+MESES_ES[lunes.getMonth()]+' – '+fin.getDate()+' '+MESES_ES[fin.getMonth()];
+  const total=citas.filter(c=>{const d=parseDate(c.fecha);return d>=lunes&&d<=fin;}).length;
+  document.getElementById('fechaSubtitle').textContent=total===0?'Sin citas esta semana':total+' cita'+(total!==1?'s':'')+' esta semana';
+}
+
+// ─── MODAL ADMIN ──────────────────────────────────────────────────
+window.openModalAdmin = function(hora='', id=null) {
+  editId=id; selServicioAdmin=null; selHoraAdmin=hora||null;
+  document.getElementById('modalTitulo').textContent=id?'Editar cita':'Nueva cita';
+  if(id){
+    const cita=citas.find(c=>c.id===id);
+    if(cita){selServicioAdmin=cita.servicio;selHoraAdmin=cita.hora;document.getElementById('fNombre').value=cita.nombre;document.getElementById('fTelefono').value=cita.telefono||'';document.getElementById('fFecha').value=cita.fecha;document.getElementById('fNotas').value=cita.notas||'';}
+  } else {
+    document.getElementById('fNombre').value='';document.getElementById('fTelefono').value='';
+    document.getElementById('fFecha').value=dateStr(selectedDate);document.getElementById('fNotas').value='';
+  }
+  buildServiciosAdmin(); actualizarHorasModal();
+  document.getElementById('modalOverlay').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('fNombre').focus(),100);
+};
+window.closeModal = function(){document.getElementById('modalOverlay').classList.add('hidden');editId=null;};
+window.closeModalOutside = function(e){if(e.target===document.getElementById('modalOverlay'))closeModal();};
+
+function buildServiciosAdmin() {
+  const g=document.getElementById('adminServiciosGrid'); g.innerHTML='';
+  SERVICIOS.forEach(s=>{const e=document.createElement('div');e.className='servicio-pill'+(selServicioAdmin===s.nombre?' selected':'');e.textContent=s.nombre;e.onclick=()=>{selServicioAdmin=s.nombre;buildServiciosAdmin();};g.appendChild(e);});
+}
+window.actualizarHorasModal = function() {
+  const fv=document.getElementById('fFecha').value; if(!fv) return;
+  const date=parseDate(fv); const turno=getTurno(date);
+  const citasFecha=citas.filter(c=>c.fecha===fv&&(!editId||c.id!==editId));
+  const cont=document.getElementById('horaOptions'); cont.innerHTML='';
+  if(turno.tipo==='dia'){cont.innerHTML='<span style="font-size:12px;color:var(--text-muted);font-family:sans-serif">🌞 Sin horarios disponibles este día.</span>';return;}
+  turno.horas.forEach(h=>{
+    const ocupada=citasFecha.some(c=>c.hora===h);
+    const pill=document.createElement('div');
+    pill.className='hora-pill'+(ocupada?' ocupada':selHoraAdmin===h?' selected':'');
+    pill.textContent=h;
+    if(!ocupada){pill.onclick=()=>{selHoraAdmin=h;actualizarHorasModal();};}
+    cont.appendChild(pill);
+  });
+};
+
+window.guardarCitaAdmin = async function() {
+  const nombre=document.getElementById('fNombre').value.trim();
+  const fecha=document.getElementById('fFecha').value;
+  if(!nombre){showToast('Ingresa el nombre');return;}
+  if(!fecha){showToast('Selecciona fecha');return;}
+  if(!selHoraAdmin){showToast('Selecciona hora');return;}
+  if(!selServicioAdmin){showToast('Selecciona servicio');return;}
+  const conflict=citas.find(c=>c.fecha===fecha&&c.hora===selHoraAdmin&&(!editId||c.id!==editId));
+  if(conflict){showToast('Horario ya ocupado');return;}
+  const datos={nombre,telefono:document.getElementById('fTelefono').value.trim(),fecha,hora:selHoraAdmin,servicio:selServicioAdmin,notas:document.getElementById('fNotas').value.trim(),origen:'admin'};
+  const {doc:docFn,setDoc:set,addDoc:add,collection:colFn}=window._fbMod;
+  if(editId){await set(docFn(db,'citas',editId),datos);}
+  else{await add(colFn(db,'citas'),datos);}
+  closeModal(); selectedDate=parseDate(fecha);
+  showToast(editId?'Cita actualizada':'Cita guardada ✓');
+};
+window.editarCitaAdmin = function(id){openModalAdmin('',id);};
+window.eliminarCita = async function(id){
+  if(!confirm('¿Eliminar esta cita?')) return;
+  const{doc:docFn,deleteDoc:del}=window._fbMod;
+  await del(docFn(db,'citas',id));
+  showToast('Cita eliminada');
+};
+
+// ════════════════════════════════════════════════════════════════
+// VISTA CLIENTE
+// ════════════════════════════════════════════════════════════════
+function renderCliente() {
+  const root=document.getElementById('appRoot');
+  const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
+
+  // Calendario cliente
+  const year=clienteCalView.getFullYear(), month=clienteCalView.getMonth();
+  const firstDay=new Date(year,month,1);
+  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
+  const dim=new Date(year,month+1,0).getDate();
+  const tStr=dateStr(today), sStr=dateStr(clienteSelFecha);
+
+  let diasHTML='';
+  ['L','M','M','J','V','S','D'].forEach(d=>{diasHTML+=`<div class="dl">${d}</div>`;});
+  for(let i=0;i<startDow;i++) diasHTML+='<div class="cal-dia empty-c"></div>';
+  for(let d=1;d<=dim;d++){
+    const dStr2=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const dt=new Date(year,month,d); const turno=getTurno(dt);
+    const citasD=citas.filter(c=>c.fecha===dStr2);
+    const horasLibres=turno.horas.filter(h=>!citasD.some(c=>c.hora===h));
+    let cls='cal-dia';
+    if(turno.tipo==='dia'||dt<today){cls+=' sin-agenda';}
+    else{
+      if(horasLibres.length>0) cls+=' con-disponibles';
+      if(dStr2===tStr) cls+=' hoy';
+      if(dStr2===sStr) cls+=' sel';
+    }
+    const clickable=turno.tipo!=='dia'&&dt>=today;
+    diasHTML+=`<div class="${cls}" ${clickable?`onclick="clienteSelDia('${dStr2}')"`:''}>${d}</div>`;
+  }
+
+  // Horas del día seleccionado
+  const turnoSel=getTurno(clienteSelFecha);
+  const citasSelFecha=citas.filter(c=>c.fecha===sStr);
+  let horasHTML='';
+  if(turnoSel.tipo==='dia'){
+    horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios disponibles este día.</p>';
+  } else {
+    turnoSel.horas.forEach(h=>{
+      const cita=citasSelFecha.find(c=>c.hora===h);
+      const esMia=cita&&cita.id===miCitaId;
+      if(cita&&!esMia){horasHTML+=`<div class="hora-btn ocupada">${h}<br><span style="font-size:10px">Ocupada</span></div>`;}
+      else if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
+      else{horasHTML+=`<div class="hora-btn" onclick="clienteSelHoraFn('${h}')">${h}</div>`;}
+    });
+    if(!horasHTML) horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios este día.</p>';
+  }
+
+  // Mi cita card
+  let miCitaHTML='';
+  if(miCita){
+    const d=parseDate(miCita.fecha);
+    miCitaHTML=`<div class="mi-cita-card">
+      <h3>Tu cita reservada</h3>
+      <p><strong>${DIAS_ES[d.getDay()]} ${d.getDate()} de ${MESES_ES[d.getMonth()]}</strong> a las <strong>${miCita.hora}</strong></p>
+      <p style="font-size:13px;color:var(--text-soft)">${miCita.servicio} · ${miCita.nombre}</p>
+      <button class="cancel-btn" onclick="cancelarMiCita()">Cancelar mi cita</button>
+    </div>`;
+  }
+
+  // Formulario reserva
+  let formHTML='';
+  if(clienteSelHora&&!miCita){
+    const serviciosOpts=SERVICIOS.map(s=>`<div class="servicio-pill${clienteSelServicio===s.nombre?' selected':''}" onclick="clienteSelServicioFn('${s.nombre}')">${s.nombre}</div>`).join('');
+    formHTML=`<div class="reserva-form">
+      <h3>Reservar las ${clienteSelHora} del ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</h3>
+      <div class="form-group"><label class="form-label">Tu nombre</label><input class="form-input" id="cNombre" type="text" placeholder="Nombre completo"></div>
+      <div class="form-group"><label class="form-label">Tu teléfono</label><input class="form-input" id="cTelefono" type="tel" placeholder="+56 9 ..."></div>
+      <div class="form-group"><label class="form-label">Servicio</label><div class="servicios-grid">${serviciosOpts}</div></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="confirmarReserva()">Confirmar reserva</button>
+    </div>`;
+  }
+
+  root.innerHTML=`<div class="cliente-wrap">
+    ${miCitaHTML}
+    <div class="cliente-cal-nav">
+      <button onclick="clienteCambiarMes(-1)">‹</button>
+      <h2>${MESES_CAP[month]} ${year}</h2>
+      <button onclick="clienteCambiarMes(1)">›</button>
+    </div>
+    <div class="cal-semana">${diasHTML}</div>
+    <div class="cliente-day-title">${DIAS_ES[clienteSelFecha.getDay()]} ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</div>
+    <div class="horas-grid">${horasHTML}</div>
+    ${formHTML}
+  </div>`;
+}
+
+window.clienteSelDia = function(dStr) {
+  clienteSelFecha=parseDate(dStr); clienteSelHora=null; clienteSelServicio=null; renderCliente();
+};
+window.clienteCambiarMes = function(dir) { clienteCalView.setMonth(clienteCalView.getMonth()+dir); renderCliente(); };
+window.clienteSelHoraFn = function(h) {
+  const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
+  if(miCita){showToast('Ya tienes una cita reservada');return;}
+  clienteSelHora=h; clienteSelServicio=null; renderCliente();
+  setTimeout(()=>document.querySelector('.reserva-form')?.scrollIntoView({behavior:'smooth'}),100);
+};
+window.clienteSelServicioFn = function(s) { clienteSelServicio=s; renderCliente(); };
+
+window.confirmarReserva = async function() {
+  const nombre=document.getElementById('cNombre')?.value.trim();
+  const tel=document.getElementById('cTelefono')?.value.trim();
+  if(!nombre){showToast('Ingresa tu nombre');return;}
+  if(!clienteSelServicio){showToast('Selecciona un servicio');return;}
+  const conflict=citas.find(c=>c.fecha===dateStr(clienteSelFecha)&&c.hora===clienteSelHora);
+  if(conflict){showToast('Esa hora ya fue reservada, elige otra');clienteSelHora=null;renderCliente();return;}
+  const {addDoc:add,collection:colFn}=window._fbMod;
+  const ref=await add(colFn(db,'citas'),{nombre,telefono:tel,fecha:dateStr(clienteSelFecha),hora:clienteSelHora,servicio:clienteSelServicio,notas:'',origen:'cliente'});
+  miCitaId=ref.id; localStorage.setItem('skinlux_mi_cita',ref.id);
+  clienteSelHora=null; showToast('¡Cita reservada! ✓'); renderCliente();
+};
+
+window.cancelarMiCita = async function() {
+  if(!confirm('¿Segura que quieres cancelar tu cita?')) return;
+  const{doc:docFn,deleteDoc:del}=window._fbMod;
+  await del(docFn(db,'citas',miCitaId));
+  localStorage.removeItem('skinlux_mi_cita'); miCitaId=null;
+  showToast('Cita cancelada'); renderCliente();
+};
+
+// Render inicial
+renderCliente();
+</script>
+</body>
+</html>
