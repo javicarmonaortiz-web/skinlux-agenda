@@ -318,6 +318,7 @@ let selectedDate = new Date(today);
 let calViewDate = new Date(today.getFullYear(), today.getMonth(), 1);
 let currentView = 'dia';
 let citas = [];
+let citasLoaded = false;
 let editId = null;
 let selServicioAdmin = null;
 let selHoraAdmin = null;
@@ -347,6 +348,7 @@ window.showToast = showToast;
 const { collection:col, onSnapshot:ons, query:qry, orderBy:ob } = window._fbMod;
 ons(qry(col(db,'citas'), ob('fecha'), ob('hora')), snap => {
   citas = snap.docs.map(d=>({id:d.id,...d.data()}));
+  citasLoaded = true;
   renderAll();
 });
 
@@ -638,6 +640,13 @@ window.eliminarCita = async function(id){
 // ════════════════════════════════════════════════════════════════
 function renderCliente() {
   const root=document.getElementById('appRoot');
+
+  // Mostrar loading mientras Firebase carga
+  if(!citasLoaded){
+    root.innerHTML='<div class="loading-screen"><div class="spinner"></div><p>Cargando agenda...</p></div>';
+    return;
+  }
+
   const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
 
   // Calendario cliente
