@@ -16,15 +16,33 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 15px; }
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Great+Vibes&display=swap');
 header {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 1rem 1.5rem; display: flex; align-items: center;
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem; display: flex; align-items: center;
   justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 8px rgba(44,31,32,0.06);
 }
-.logo { display: flex; align-items: center; gap: 10px; }
-.logo-mark { width: 36px; height: 36px; background: var(--rose-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--rose-dark); }
-.logo-text { font-size: 14px; font-family: 'Georgia', serif; color: var(--text-soft); letter-spacing: 0.04em; line-height: 1.2; }
-.logo-text strong { display: block; font-size: 16px; color: var(--text); font-weight: normal; letter-spacing: 0.06em; }
+.logo { display: flex; align-items: center; }
+.logo-mark { display: none; }
+.logo-text { line-height: 1; }
+.logo-text strong {
+  display: block;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-size: 20px;
+  color: #1a1a1a;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.logo-text span {
+  display: block;
+  font-family: 'Great Vibes', cursive;
+  font-size: 20px;
+  color: #C9A96E;
+  line-height: 1.2;
+}
 .header-right { display: flex; align-items: center; gap: 10px; }
 .mode-badge { font-size: 11px; font-family: sans-serif; padding: 4px 10px; border-radius: 20px; }
 .mode-badge.admin { background: var(--rose-light); color: var(--rose-dark); }
@@ -206,8 +224,10 @@ header {
 
 <header>
   <div class="logo">
-    <div class="logo-mark">✦</div>
-    <div class="logo-text"><strong>SKIN LUX</strong>by Javiera</div>
+    <div class="logo-text">
+      <strong>SKIN LUX</strong>
+      <span>by Javiera</span>
+    </div>
   </div>
   <div class="header-right">
     <span class="mode-badge" id="modeBadge"></span>
