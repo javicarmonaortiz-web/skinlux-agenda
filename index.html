@@ -166,8 +166,8 @@ header {
 .horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
 .hora-btn { padding: 12px 8px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--white); font-size: 15px; font-family: 'Georgia', serif; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
 .hora-btn:hover { border-color: var(--rose); background: var(--rose-light); color: var(--rose-dark); }
-.hora-btn.ocupada { background: var(--cream-dark); color: var(--text-muted); cursor: not-allowed; font-size: 13px; text-decoration: line-through; }
-.hora-btn.ocupada:hover { border-color: var(--border); background: var(--cream-dark); color: var(--text-muted); }
+.hora-btn.ocupada { background: #F5F5F5; color: #CCCCCC; cursor: not-allowed; font-size: 15px; text-decoration: line-through; border-color: #E8E8E8; }
+.hora-btn.ocupada:hover { border-color: #E8E8E8; background: #F5F5F5; color: #CCCCCC; }
 .hora-btn.mi-cita { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); font-weight: 600; }
 
 .mi-cita-card { background: var(--rose-light); border: 1.5px solid var(--rose); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
@@ -666,8 +666,8 @@ function renderCliente() {
     turnoSel.horas.forEach(h=>{
       const cita=citasSelFecha.find(c=>c.hora===h);
       const esMia=cita&&cita.id===miCitaId;
-      if(cita&&!esMia){horasHTML+=`<div class="hora-btn ocupada">${h}<br><span style="font-size:10px">Ocupada</span></div>`;}
-      else if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
+      if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
+      else if(cita){horasHTML+=`<div class="hora-btn ocupada">${h}</div>`;}
       else{horasHTML+=`<div class="hora-btn" onclick="clienteSelHoraFn('${h}')">${h}</div>`;}
     });
     if(!horasHTML) horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios este día.</p>';
@@ -734,6 +734,25 @@ window.confirmarReserva = async function() {
   const {addDoc:add,collection:colFn}=window._fbMod;
   const ref=await add(colFn(db,'citas'),{nombre,telefono:tel,fecha:dateStr(clienteSelFecha),hora:clienteSelHora,servicio:clienteSelServicio,notas:'',origen:'cliente'});
   miCitaId=ref.id; localStorage.setItem('skinlux_mi_cita',ref.id);
+
+  // Datos para notificaciones
+  const fechaStr=clienteSelFecha.getDate()+' de '+MESES_ES[clienteSelFecha.getMonth()];
+  const hora=clienteSelHora;
+  const servicio=clienteSelServicio;
+
+  // Email a Javi
+  const emailSubject=encodeURIComponent('Nueva reserva Skin Lux — '+nombre);
+  const emailBody=encodeURIComponent('Hola Javi!\n\nTienes una nueva cita reservada:\n\nCliente: '+nombre+'\nTeléfono: '+(tel||'No indicado')+'\nFecha: '+fechaStr+'\nHora: '+hora+'\nServicio: '+servicio+'\n\nRevisa tu agenda en: https://stellar-heliotrope-6f2c74.netlify.app');
+  const mailtoLink='mailto:javicarmonaortiz@gmail.com?subject='+emailSubject+'&body='+emailBody;
+  window.open(mailtoLink,'_blank');
+
+  // WhatsApp al cliente
+  if(tel){
+    const telLimpio=tel.replace(/[^0-9]/g,'');
+    const waMsg=encodeURIComponent('Hola '+nombre+'! 🌸 Tu cita en SKIN LUX by Javiera ha sido confirmada.\n\n📅 Fecha: '+fechaStr+'\n🕐 Hora: '+hora+'\n✨ Servicio: '+servicio+'\n\nTe esperamos! Cualquier consulta escríbenos. 💕');
+    setTimeout(()=>window.open('https://wa.me/56'+telLimpio+'?text='+waMsg,'_blank'),1000);
+  }
+
   clienteSelHora=null; showToast('¡Cita reservada! ✓'); renderCliente();
 };
 
