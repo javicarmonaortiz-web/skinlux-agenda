@@ -738,13 +738,20 @@ window.confirmarReserva = async function() {
   const conflict=citas.find(c=>c.fecha===dateStr(clienteSelFecha)&&c.hora===clienteSelHora);
   if(conflict){showToast('Esa hora ya fue reservada, elige otra');clienteSelHora=null;renderCliente();return;}
   const {addDoc:add,collection:colFn}=window._fbMod;
-  const ref=await add(colFn(db,'citas'),{nombre,telefono:tel,fecha:dateStr(clienteSelFecha),hora:clienteSelHora,servicio:clienteSelServicio,notas:'',origen:'cliente'});
+  const fechaGuardada=dateStr(clienteSelFecha);
+  const horaGuardada=clienteSelHora;
+  const servicioGuardado=clienteSelServicio;
+
+  const ref=await add(colFn(db,'citas'),{nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
   miCitaId=ref.id; localStorage.setItem('skinlux_mi_cita',ref.id);
+
+  // Actualizar citas localmente de inmediato (sin esperar Firebase listener)
+  citas.push({id:ref.id,nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
 
   // Datos para notificaciones
   const fechaStr=clienteSelFecha.getDate()+' de '+MESES_ES[clienteSelFecha.getMonth()];
-  const hora=clienteSelHora;
-  const servicio=clienteSelServicio;
+  const hora=horaGuardada;
+  const servicio=servicioGuardado;
 
   // Email a Javi
   const emailSubject=encodeURIComponent('Nueva reserva Skin Lux — '+nombre);
