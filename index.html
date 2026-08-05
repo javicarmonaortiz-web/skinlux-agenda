@@ -146,21 +146,28 @@ header {
 
 /* ── VISTA CLIENTE ── */
 .cliente-wrap { max-width: 520px; margin: 0 auto; padding: 2rem 1rem; }
-.cliente-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.cliente-cal-nav h2 { font-size: 18px; font-weight: normal; color: var(--text); }
-.cliente-cal-nav button { background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer; padding: 4px 10px; border-radius: 6px; transition: color 0.1s; }
-.cliente-cal-nav button:hover { color: var(--rose); }
-.cal-semana { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 1.5rem; }
-.cal-semana .dl { font-size: 10px; color: var(--text-muted); font-family: sans-serif; text-align: center; font-weight: 600; padding-bottom: 4px; }
-.cal-dia { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 13px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.15s; }
-.cal-dia:hover { background: var(--rose-light); color: var(--rose-dark); }
-.cal-dia.hoy { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
-.cal-dia.sel { background: var(--rose); color: white; }
-.cal-dia.sin-agenda { color: var(--border); cursor: default; }
-.cal-dia.sin-agenda:hover { background: none; color: var(--border); }
-.cal-dia.con-disponibles { position: relative; }
-.cal-dia.con-disponibles::after { content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--rose); border-radius: 50%; }
-.cal-dia.empty-c { cursor: default; }
+
+/* SCROLL DE DÍAS */
+.dias-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none; }
+.dias-scroll::-webkit-scrollbar { display: none; }
+.dia-btn {
+  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; padding: 10px 14px; border-radius: 12px;
+  border: 1.5px solid var(--border); background: var(--white);
+  cursor: pointer; transition: all 0.15s; min-width: 62px; position: relative;
+}
+.dia-btn:hover { border-color: var(--rose); background: var(--rose-light); }
+.dia-btn.sel { background: var(--rose); border-color: var(--rose); }
+.dia-btn-dow { font-size: 10px; font-family: sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.dia-btn.sel .dia-btn-dow { color: rgba(255,255,255,0.8); }
+.dia-btn-num { font-size: 20px; font-family: 'Georgia', serif; color: var(--text); line-height: 1; }
+.dia-btn.sel .dia-btn-num { color: white; }
+.dia-btn-mes { font-size: 10px; font-family: sans-serif; color: var(--text-muted); }
+.dia-btn.sel .dia-btn-mes { color: rgba(255,255,255,0.8); }
+.dia-btn-hoy { font-size: 9px; font-family: sans-serif; color: var(--rose); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+.dia-btn.sel .dia-btn-hoy { color: rgba(255,255,255,0.9); }
+.dia-btn-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
+.dia-btn.sel .dia-btn-dot { background: white; }
 
 .cliente-day-title { font-size: 16px; color: var(--text); margin-bottom: 12px; }
 .horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
@@ -645,51 +652,55 @@ window.eliminarCita = async function(id){
 // ════════════════════════════════════════════════════════════════
 function renderCliente() {
   const root=document.getElementById('appRoot');
-
   const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
+  const tStr=dateStr(today);
+  const sStr=dateStr(clienteSelFecha);
 
-  // Calendario cliente
-  const year=clienteCalView.getFullYear(), month=clienteCalView.getMonth();
-  const firstDay=new Date(year,month,1);
-  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
-  const dim=new Date(year,month+1,0).getDate();
-  const tStr=dateStr(today), sStr=dateStr(clienteSelFecha);
-
-  let diasHTML='';
-  ['L','M','M','J','V','S','D'].forEach(d=>{diasHTML+=`<div class="dl">${d}</div>`;});
-  for(let i=0;i<startDow;i++) diasHTML+='<div class="cal-dia empty-c"></div>';
-  for(let d=1;d<=dim;d++){
-    const dStr2=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const dt=new Date(year,month,d); const turno=getTurno(dt);
-    const citasD=citas.filter(c=>c.fecha===dStr2);
-    const horasLibres=turno.horas.filter(h=>!citasD.some(c=>c.hora===h));
-    let cls='cal-dia';
-    if(turno.tipo==='dia'||dt<today){cls+=' sin-agenda';}
-    else{
-      if(horasLibres.length>0) cls+=' con-disponibles';
-      if(dStr2===tStr) cls+=' hoy';
-      if(dStr2===sStr) cls+=' sel';
-    }
-    const clickable=turno.tipo!=='dia'&&dt>=today;
-    diasHTML+=`<div class="${cls}" ${clickable?`onclick="clienteSelDia('${dStr2}')"`:''}>${d}</div>`;
+  // Calcular los próximos 7 días con atención (no turno día)
+  const diasDisponibles=[];
+  let cursor=new Date(today);
+  while(diasDisponibles.length<7){
+    const t=getTurno(cursor);
+    if(t.tipo!=='dia') diasDisponibles.push(dateStr(cursor));
+    cursor.setDate(cursor.getDate()+1);
   }
+
+  // Si clienteSelFecha no está en los 7 días, seleccionar el primero
+  if(!diasDisponibles.includes(sStr)){
+    clienteSelFecha=parseDate(diasDisponibles[0]);
+  }
+  const sStrFinal=dateStr(clienteSelFecha);
+
+  // Construir botones de días (horizontal scroll)
+  let diasHTML=diasDisponibles.map(dStr2=>{
+    const dt=parseDate(dStr2);
+    const citasD=citas.filter(c=>c.fecha===dStr2);
+    const turno=getTurno(dt);
+    const horasLibres=turno.horas.filter(h=>!citasD.some(c=>c.hora===h));
+    const esHoy=dStr2===tStr;
+    const esSel=dStr2===sStrFinal;
+    const tieneDisp=horasLibres.length>0;
+    return `<button class="dia-btn${esSel?' sel':''}" onclick="clienteSelDia('${dStr2}')">
+      <span class="dia-btn-dow">${DIAS_ES[dt.getDay()]}</span>
+      <span class="dia-btn-num">${dt.getDate()}</span>
+      <span class="dia-btn-mes">${MESES_ES[dt.getMonth()].slice(0,3)}</span>
+      ${esHoy?'<span class="dia-btn-hoy">hoy</span>':''}
+      ${tieneDisp?'<span class="dia-btn-dot"></span>':''}
+    </button>`;
+  }).join('');
 
   // Horas del día seleccionado
   const turnoSel=getTurno(clienteSelFecha);
-  const citasSelFecha=citas.filter(c=>c.fecha===sStr);
+  const citasSelFecha=citas.filter(c=>c.fecha===sStrFinal);
   let horasHTML='';
-  if(turnoSel.tipo==='dia'){
-    horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios disponibles este día.</p>';
-  } else {
-    turnoSel.horas.forEach(h=>{
-      const cita=citasSelFecha.find(c=>c.hora===h);
-      const esMia=cita&&cita.id===miCitaId;
-      if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
-      else if(cita){horasHTML+=`<div class="hora-btn ocupada">${h}</div>`;}
-      else{horasHTML+=`<div class="hora-btn" onclick="clienteSelHoraFn('${h}')">${h}</div>`;}
-    });
-    if(!horasHTML) horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios este día.</p>';
-  }
+  turnoSel.horas.forEach(h=>{
+    const cita=citasSelFecha.find(c=>c.hora===h);
+    const esMia=cita&&cita.id===miCitaId;
+    if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
+    else if(cita){horasHTML+=`<div class="hora-btn ocupada">${h}</div>`;}
+    else{horasHTML+=`<div class="hora-btn" onclick="clienteSelHoraFn('${h}')">${h}</div>`;}
+  });
+  if(!horasHTML) horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios disponibles este día.</p>';
 
   // Mi cita card
   let miCitaHTML='';
@@ -718,13 +729,9 @@ function renderCliente() {
 
   root.innerHTML=`<div class="cliente-wrap">
     ${miCitaHTML}
-    <div class="cliente-cal-nav">
-      <button onclick="clienteCambiarMes(-1)">‹</button>
-      <h2>${MESES_CAP[month]} ${year}</h2>
-      <button onclick="clienteCambiarMes(1)">›</button>
-    </div>
-    <div class="cal-semana">${diasHTML}</div>
-    <div class="cliente-day-title">${DIAS_ES[clienteSelFecha.getDay()]} ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</div>
+    <p style="font-size:11px;color:var(--text-muted);font-family:sans-serif;text-align:center;margin-bottom:12px;letter-spacing:0.06em;text-transform:uppercase">Próximos días disponibles</p>
+    <div class="dias-scroll">${diasHTML}</div>
+    <div class="cliente-day-title" style="margin-top:1.25rem">${DIAS_ES[clienteSelFecha.getDay()]} ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</div>
     <div class="horas-grid">${horasHTML}</div>
     ${formHTML}
   </div>`;
