@@ -263,8 +263,9 @@ header {
       <label class="form-label">Notas</label>
       <input class="form-input" id="fNotas" type="text" placeholder="Indicaciones, alergias, etc.">
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer" id="modalFooter">
       <button class="btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn" id="btnEliminarModal" style="display:none;border-color:#e74c3c;color:#e74c3c" onclick="eliminarDesdModal()">Eliminar</button>
       <button class="btn btn-primary" onclick="guardarCitaAdmin()">Guardar</button>
     </div>
   </div>
@@ -565,6 +566,8 @@ function renderSemana() {
 window.openModalAdmin = function(hora='', id=null) {
   editId=id; selServicioAdmin=null; selHoraAdmin=hora||null;
   document.getElementById('modalTitulo').textContent=id?'Editar cita':'Nueva cita';
+  const btnEl=document.getElementById('btnEliminarModal');
+  if(btnEl) btnEl.style.display=id?'inline-block':'none';
   if(id){
     const cita=citas.find(c=>c.id===id);
     if(cita){selServicioAdmin=cita.servicio;selHoraAdmin=cita.hora;document.getElementById('fNombre').value=cita.nombre;document.getElementById('fTelefono').value=cita.telefono||'';document.getElementById('fFecha').value=cita.fecha;document.getElementById('fNotas').value=cita.notas||'';}
@@ -616,6 +619,13 @@ window.guardarCitaAdmin = async function() {
   showToast(editId?'Cita actualizada':'Cita guardada ✓');
 };
 window.editarCitaAdmin = function(id){openModalAdmin('',id);};
+window.eliminarDesdModal = async function(){
+  if(!editId) return;
+  if(!confirm('¿Eliminar esta cita?')) return;
+  const{doc:docFn,deleteDoc:del}=window._fbMod;
+  await del(docFn(db,'citas',editId));
+  closeModal(); showToast('Cita eliminada');
+};
 window.eliminarCita = async function(id){
   if(!confirm('¿Eliminar esta cita?')) return;
   const{doc:docFn,deleteDoc:del}=window._fbMod;
