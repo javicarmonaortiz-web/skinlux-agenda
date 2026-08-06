@@ -782,12 +782,19 @@ window.confirmarReserva = async function() {
   const servicio=servicioGuardado;
 
   // Email automático a Javi via EmailJS
+  // Construir fecha ISO para Zapier → Google Calendar
+  const fechaISO = fechaGuardada + 'T' + horaGuardada + ':00';
+  const [hh, mm] = horaGuardada.split(':').map(Number);
+  const fechaISOFin = fechaGuardada + 'T' + String(hh+1).padStart(2,'0') + ':' + String(mm).padStart(2,'0') + ':00';
+
   emailjs.send("service_r73o47s", "template_smf6n3r", {
     nombre: nombre,
     telefono: tel || "No indicado",
     fecha: fechaStr,
     hora: hora,
     servicio: servicio,
+    fecha_iso: fechaISO,
+    fecha_iso_fin: fechaISOFin,
     name: nombre,
     email: "javicarmonaortiz@gmail.com"
   }).then(() => {
