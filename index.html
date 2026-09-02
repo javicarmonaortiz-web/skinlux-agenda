@@ -282,11 +282,10 @@ header {
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>emailjs.init("A89FvqhG00KPy4fXk");</script>
 
-<!-- Firebase SDK -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
+<!-- Firebase SDK (compat — funciona en Safari iOS y en iframes srcdoc) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyCkxmV_LhuuEvUwNhNhiiOfnUNWBDw1-b0",
   authDomain: "skinlux-agenda.firebaseapp.com",
@@ -295,10 +294,9 @@ const firebaseConfig = {
   messagingSenderId: "361386858959",
   appId: "1:361386858959:web:12f9a3dae558e7a12b5aba"
 };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 window._db = db;
-window._fbMod = { collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy, getDocs };
 
 // ─── CONSTANTES ──────────────────────────────────────────────────
 const CICLO_INICIO = new Date(2026, 7, 5);
@@ -355,8 +353,7 @@ function showToast(msg) {
 window.showToast = showToast;
 
 // ─── FIRESTORE LISTENER ──────────────────────────────────────────
-const { collection:col, onSnapshot:ons, query:qry, orderBy:ob } = window._fbMod;
-ons(qry(col(db,'citas'), ob('fecha'), ob('hora')), snap => {
+db.collection('citas').orderBy('fecha').orderBy('hora').onSnapshot(snap => {
   citas = snap.docs.map(d=>({id:d.id,...d.data()}));
   citasLoaded = true;
   renderAll();
@@ -629,9 +626,8 @@ window.guardarCitaAdmin = async function() {
   const conflict=citas.find(c=>c.fecha===fecha&&c.hora===selHoraAdmin&&(!editId||c.id!==editId));
   if(conflict){showToast('Horario ya ocupado');return;}
   const datos={nombre,telefono:document.getElementById('fTelefono').value.trim(),fecha,hora:selHoraAdmin,servicio:selServicioAdmin,notas:document.getElementById('fNotas').value.trim(),origen:'admin'};
-  const {doc:docFn,setDoc:set,addDoc:add,collection:colFn}=window._fbMod;
-  if(editId){await set(docFn(db,'citas',editId),datos);}
-  else{await add(colFn(db,'citas'),datos);}
+  if(editId){await db.collection('citas').doc(editId).set(datos);}
+  else{await db.collection('citas').add(datos);}
   closeModal(); selectedDate=parseDate(fecha);
   showToast(editId?'Cita actualizada':'Cita guardada ✓');
 };
@@ -639,14 +635,12 @@ window.editarCitaAdmin = function(id){openModalAdmin('',id);};
 window.eliminarDesdModal = async function(){
   if(!editId) return;
   if(!confirm('¿Eliminar esta cita?')) return;
-  const{doc:docFn,deleteDoc:del}=window._fbMod;
-  await del(docFn(db,'citas',editId));
+  await db.collection('citas').doc(editId).delete();
   closeModal(); showToast('Cita eliminada');
 };
 window.eliminarCita = async function(id){
   if(!confirm('¿Eliminar esta cita?')) return;
-  const{doc:docFn,deleteDoc:del}=window._fbMod;
-  await del(docFn(db,'citas',id));
+  await db.collection('citas').doc(id).delete();
   showToast('Cita eliminada');
 };
 
@@ -765,12 +759,11 @@ window.confirmarReserva = async function() {
   if(!clienteSelServicio){showToast('Selecciona un servicio');return;}
   const conflict=citas.find(c=>c.fecha===dateStr(clienteSelFecha)&&c.hora===clienteSelHora);
   if(conflict){showToast('Esa hora ya fue reservada, elige otra');clienteSelHora=null;renderCliente();return;}
-  const {addDoc:add,collection:colFn}=window._fbMod;
   const fechaGuardada=dateStr(clienteSelFecha);
   const horaGuardada=clienteSelHora;
   const servicioGuardado=clienteSelServicio;
 
-  const ref=await add(colFn(db,'citas'),{nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
+  const ref=await db.collection('citas').add({nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
   miCitaId=ref.id; localStorage.setItem('skinlux_mi_cita',ref.id);
 
   // Actualizar citas localmente de inmediato (sin esperar Firebase listener)
@@ -815,8 +808,7 @@ window.confirmarReserva = async function() {
 
 window.cancelarMiCita = async function() {
   if(!confirm('¿Segura que quieres cancelar tu cita?')) return;
-  const{doc:docFn,deleteDoc:del}=window._fbMod;
-  await del(docFn(db,'citas',miCitaId));
+  await db.collection('citas').doc(miCitaId).delete();
   localStorage.removeItem('skinlux_mi_cita'); miCitaId=null;
   showToast('Cita cancelada'); renderCliente();
 };
