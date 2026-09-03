@@ -315,15 +315,10 @@ const SERVICIOS = [
   { nombre:'Lifting de Pestañas',         duracion:'60 min',      precio:'$30.000', color:'brown' },
 ];
 
-// ── CICLO TURNOS (editable desde admin) ───────────────────────
-const CICLO_INICIO = new Date(2026,7,5);
-let CICLO = [
-  { nombre:'Turno día',      tipo:'dia',      horas:[] },
-  { nombre:'Turno noche',    tipo:'noche',    horas:['11:00','13:00','15:00'] },
-  { nombre:'Saliente noche', tipo:'saliente', horas:['15:00','17:00','19:00'] },
-  { nombre:'Libre',          tipo:'libre',    horas:['10:00','11:00','13:00','15:00','17:00','19:00'] },
-];
-const TURNO_ICONS = { dia:'☀️', noche:'🌙', saliente:'🌅', libre:'✦' };
+// ── DISPONIBILIDAD MANUAL POR FECHA ───────────────────────────
+// No existen horarios automáticos: sólo se publican los que Javiera guarda desde Admin.
+let DISPONIBILIDAD = {};
+let CONFIG_FECHA = '', CONFIG_HORAS = [];
 const DIAS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const DIASL  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
 const MESES  = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -339,15 +334,15 @@ let cStep=1, cFecha=new Date(today), cHora=null, cServicio=null;
 let miCitaId=localStorage.getItem('skinlux_mi_cita')||null;
 
 // ── HELPERS ───────────────────────────────────────────────────
-function getTurno(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const ref=new Date(CICLO_INICIO.getFullYear(),CICLO_INICIO.getMonth(),CICLO_INICIO.getDate());const diff=Math.round((d-ref)/86400000);return CICLO[((diff%4)+4)%4];}
 function dateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
 function horaNum(h){const[hh,mm]=h.split(':').map(Number);return hh*60+mm;}
+function horasFecha(date){return [...(DISPONIBILIDAD[dateStr(date)]||[])].sort((a,b)=>horaNum(a)-horaNum(b));}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
 // ── INIT ──────────────────────────────────────────────────────
 async function init(){
-  try{const doc=await db.collection('config').doc('horarios').get();if(doc.exists&&doc.data().ciclo)CICLO=doc.data().ciclo;}catch(e){}
+  try{const doc=await db.collection('config').doc('horarios').get();if(doc.exists&&doc.data().disponibilidad)DISPONIBILIDAD=doc.data().disponibilidad;}catch(e){}
   db.collection('citas').orderBy('fecha').orderBy('hora').onSnapshot(snap=>{
     citas=snap.docs.map(d=>({id:d.id,...d.data()}));citasLoaded=true;renderAll();
   },err=>{citasLoaded=true;renderAll();showToast('Error: '+err.code);});
@@ -404,7 +399,7 @@ function renderAdmin(){
         <div class="upcoming-list" id="upList"></div>
       </div>
       <div style="margin-top:auto">
-        <button class="btn" style="width:100%;font-size:11px;color:var(--ink-soft)" onclick="abrirConfigHorarios()">✦ Configurar horarios</button>
+        <button class="btn" style="width:100%;font-size:11px;color:var(--ink-soft)" onclick="abrirConfigHorarios()">✦ Configurar fecha y horarios</button>
       </div>
     </aside>
     <main class="main">
@@ -439,12 +434,12 @@ function renderMiniCal(){
   const tS=dateStr(today),sS=dateStr(selectedDate);
   for(let i=0;i<sd;i++){const e=document.createElement('div');e.className='mini-day empty';g.appendChild(e);}
   for(let d=1;d<=dim;d++){
-    const dt=new Date(y,m,d),t=getTurno(dt),dS=dateStr(dt);
+    const dt=new Date(y,m,d),dS=dateStr(dt),horas=horasFecha(dt);
     const e=document.createElement('div');e.className='mini-day';e.textContent=d;
     if(dS===tS)e.classList.add('today');if(dS===sS)e.classList.add('selected');
-    if(t.tipo==='dia')e.classList.add('no-atiende');
+    if(!horas.length)e.classList.add('no-atiende');
     if(citas.some(c=>c.fecha===dS))e.classList.add('has-cita');
-    if(t.tipo!=='dia')e.onclick=()=>{selectedDate=new Date(y,m,d);renderAdmin();};
+    e.onclick=()=>{selectedDate=new Date(y,m,d);renderAdmin();};
     g.appendChild(e);
   }
 }
@@ -469,16 +464,15 @@ function renderUpcoming(){
   });
 }
 function renderDia(){
-  const dS=dateStr(selectedDate),turno=getTurno(selectedDate);
+  const dS=dateStr(selectedDate),horas=horasFecha(selectedDate);
   const citasHoy=citas.filter(c=>c.fecha===dS);
   document.getElementById('fTitle').textContent=DIASL[selectedDate.getDay()]+', '+selectedDate.getDate()+' de '+MESES[selectedDate.getMonth()];
-  document.getElementById('fSub').textContent=turno.tipo==='dia'?turno.nombre+' — sin atención':turno.nombre+' · '+turno.horas.length+' horarios';
+  document.getElementById('fSub').textContent=horas.length?horas.length+' horario'+(horas.length!==1?'s':'')+' publicado'+(horas.length!==1?'s':''):'Sin horarios publicados';
   const cont=document.getElementById('vDia');cont.innerHTML='';
-  const msgs={dia:'Javi tiene <strong>turno día</strong> — sin atención Skin Lux.',noche:'Javi tiene <strong>turno noche</strong> — atiende antes de entrar al turno.',saliente:'Javi <strong>sale de turno noche</strong> — atiende en la tarde.',libre:'Javi está <strong>libre</strong> — disponible todo el día.'};
-  cont.innerHTML+=`<div class="turno-banner ${turno.tipo}"><span>${TURNO_ICONS[turno.tipo]}</span><span>${msgs[turno.tipo]}</span></div>`;
-  if(turno.tipo==='dia'){cont.innerHTML+=`<div class="no-atiende-full"><div class="icon">🏥</div><p>Sin atención hoy.</p></div>`;return;}
+  cont.innerHTML+=`<div class="turno-banner libre"><span>✦</span><span>${horas.length?'Disponibilidad configurada manualmente para esta fecha.':'Aún no has publicado horarios para esta fecha.'}</span></div>`;
+  if(!horas.length){cont.innerHTML+=`<div class="no-atiende-full"><div class="icon">＋</div><p>Sin horarios disponibles.</p><button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="abrirConfigHorarios()">Configurar esta fecha</button></div>`;return;}
   const grid=document.createElement('div');grid.className='schedule-grid';
-  turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).forEach(hora=>{
+  horas.forEach(hora=>{
     const slot=document.createElement('div');slot.className='time-slot';
     const lbl=document.createElement('div');lbl.className='time-label';lbl.textContent=hora;slot.appendChild(lbl);
     const area=document.createElement('div');area.className='slot-area';
@@ -501,7 +495,7 @@ function renderSemana(){
   const dow=selectedDate.getDay(),diff=dow===0?-6:1-dow;
   const lunes=new Date(selectedDate);lunes.setDate(selectedDate.getDate()+diff);
   const dias=[];for(let i=0;i<7;i++){const d=new Date(lunes);d.setDate(lunes.getDate()+i);dias.push(d);}
-  const todasH=new Set();dias.forEach(d=>getTurno(d).horas.forEach(h=>todasH.add(h)));
+  const todasH=new Set();dias.forEach(d=>horasFecha(d).forEach(h=>todasH.add(h)));
   const hOrd=[...todasH].sort((a,b)=>horaNum(a)-horaNum(b));
   const tS=dateStr(today),g=document.getElementById('vSem');g.innerHTML='';
   const wg=document.createElement('div');wg.className='week-grid';
@@ -509,18 +503,18 @@ function renderSemana(){
   g.appendChild(wg);
   const corner=document.createElement('div');corner.className='week-header';wg.appendChild(corner);
   dias.forEach(d=>{
-    const dS=dateStr(d),t=getTurno(d);
+    const dS=dateStr(d);
     const h=document.createElement('div');
     h.className='week-header'+(dS===tS?' today-col':'');
-    h.innerHTML=`${DIAS[d.getDay()]}<br><strong style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">${d.getDate()}</strong><br><span style="font-size:10px">${TURNO_ICONS[t.tipo]}</span>`;
+    h.innerHTML=`${DIAS[d.getDay()]}<br><strong style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">${d.getDate()}</strong><br><span style="font-size:10px">${horasFecha(d).length?'✦':'—'}</span>`;
     wg.appendChild(h);
   });
   hOrd.forEach(hora=>{
     const tl=document.createElement('div');tl.className='week-cell time-col';tl.textContent=hora;wg.appendChild(tl);
     dias.forEach(d=>{
       const cell=document.createElement('div');cell.className='week-cell';
-      const dS=dateStr(d),turno=getTurno(d);
-      if(!turno.horas.includes(hora)){cell.classList.add('bloqueada');}
+      const dS=dateStr(d),horas=horasFecha(d);
+      if(!horas.includes(hora)){cell.classList.add('bloqueada');}
       else{
         const cita=citas.find(c=>c.fecha===dS&&c.hora===hora);
         if(cita){const b=document.createElement('div');b.className='week-cita';b.textContent=cita.nombre;b.onclick=e=>{e.stopPropagation();editarCita(cita.id);};cell.appendChild(b);}
@@ -538,8 +532,8 @@ function renderSemana(){
 // ── MODAL ADMIN ───────────────────────────────────────────────
 window.openModalAdmin=function(h=''){
   editId=null;
-  const dS=dateStr(selectedDate),turno=getTurno(selectedDate);
-  const hOpt=turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(x=>`<option value="${x}"${x===h?' selected':''}>${x}</option>`).join('');
+  const dS=dateStr(selectedDate),horas=horasFecha(selectedDate);
+  const hOpt=horas.map(x=>`<option value="${x}"${x===h?' selected':''}>${x}</option>`).join('');
   const sOpt=SERVICIOS.map(s=>`<option value="${s.nombre}">${s.nombre}</option>`).join('');
   document.getElementById('modalContent').innerHTML=`
   <h3 class="modal-title">Nueva cita</h3>
@@ -559,8 +553,8 @@ window.openModalAdmin=function(h=''){
 };
 window.editarCita=function(id){
   const c=citas.find(x=>x.id===id);if(!c)return;editId=id;
-  const turno=getTurno(parseDate(c.fecha));
-  const hOpt=turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(x=>`<option value="${x}"${x===c.hora?' selected':''}>${x}</option>`).join('');
+  const horas=horasFecha(parseDate(c.fecha));
+  const hOpt=horas.map(x=>`<option value="${x}"${x===c.hora?' selected':''}>${x}</option>`).join('');
   const sOpt=SERVICIOS.map(s=>`<option value="${s.nombre}"${s.nombre===c.servicio?' selected':''}>${s.nombre}</option>`).join('');
   document.getElementById('modalContent').innerHTML=`
   <h3 class="modal-title">Editar cita</h3>
@@ -570,7 +564,7 @@ window.editarCita=function(id){
   <div class="modal-row"><label class="inp-label">Hora</label>
     <div style="display:flex;gap:8px;align-items:center">
       <select class="inp" id="mH" style="flex:1" onchange="syncHoraCustom(this.value)">${hOpt}<option value="custom">✎ Ingresar hora personalizada...</option></select>
-      <input class="inp" type="time" id="mHcustom" style="width:110px;${!turno.horas.includes(c.hora)?'':'display:none'}" value="${!turno.horas.includes(c.hora)?c.hora:''}" oninput="document.getElementById('mH').value='custom'">
+      <input class="inp" type="time" id="mHcustom" style="width:110px;${!horas.includes(c.hora)?'':'display:none'}" value="${!horas.includes(c.hora)?c.hora:''}" oninput="document.getElementById('mH').value='custom'">
     </div>
   </div>
   <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="mF" value="${c.fecha}"></div>
@@ -600,38 +594,40 @@ window.eliminarCita=async function(id){
 };
 
 // ── CONFIG HORARIOS ───────────────────────────────────────────
-window.abrirConfigHorarios=function(){
-  const tipos=CICLO.filter(t=>t.tipo!=='dia');
+window.abrirConfigHorarios=function(fecha=''){
+  CONFIG_FECHA=fecha||dateStr(selectedDate);
+  CONFIG_HORAS=[...(DISPONIBILIDAD[CONFIG_FECHA]||[])].sort((a,b)=>horaNum(a)-horaNum(b));
   document.getElementById('modalContent').innerHTML=`
-  <h3 class="modal-title">Configurar horarios</h3>
-  <p style="font-size:12px;color:var(--ink-muted);margin-bottom:1.5rem;line-height:1.6">Define los horarios disponibles para cada tipo de turno.</p>
-  ${tipos.map(turno=>`
+  <h3 class="modal-title">Disponibilidad por fecha</h3>
+  <p style="font-size:12px;color:var(--ink-muted);margin-bottom:1rem;line-height:1.6">Elige una fecha y agrega solamente las horas en que atenderás. Los clientes no verán ningún horario que no publiques aquí.</p>
+  <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="cfgFecha" value="${CONFIG_FECHA}" min="${dateStr(today)}" onchange="cambiarFechaConfig(this.value)"></div>
   <div class="turno-cfg">
-    <div class="turno-cfg-title">${TURNO_ICONS[turno.tipo]} ${turno.nombre}</div>
-    <div class="horas-config-grid" id="hg-${turno.tipo}">
-      ${turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(h=>`<div class="hora-tag" id="ht-${turno.tipo}-${h.replace(':','')}">${h}<button class="rm" onclick="qH('${turno.tipo}','${h}')">×</button></div>`).join('')}
+    <div class="turno-cfg-title">✦ Horarios publicados</div>
+    <div class="horas-config-grid" id="hg-fecha">
+      ${CONFIG_HORAS.length?CONFIG_HORAS.map(h=>`<div class="hora-tag" id="ht-fecha-${h.replace(':','')}">${h}<button class="rm" onclick="qH('${h}')">×</button></div>`).join(''):'<span id="sinHorasCfg" style="font-size:12px;color:var(--ink-muted)">Todavía no hay horarios.</span>'}
     </div>
     <div class="add-hora-row">
-      <input class="inp" type="time" id="nh-${turno.tipo}" style="width:120px;padding:7px 10px">
-      <button class="btn btn-sm" onclick="aH('${turno.tipo}')">Agregar</button>
+      <input class="inp" type="time" id="nh-fecha" style="width:120px;padding:7px 10px">
+      <button class="btn btn-sm" onclick="aH()">Agregar hora</button>
     </div>
-  </div>`).join('')}
+  </div>
   <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="guardarHoras()">Guardar cambios</button></div>`;
   document.getElementById('modalBg').classList.add('open');
 };
-window.qH=function(tipo,hora){CICLO.find(t=>t.tipo===tipo).horas=CICLO.find(t=>t.tipo===tipo).horas.filter(h=>h!==hora);document.getElementById(`ht-${tipo}-${hora.replace(':','')}`)?.remove();};
-window.aH=function(tipo){
-  const inp=document.getElementById(`nh-${tipo}`);const val=inp.value;if(!val)return;
+window.cambiarFechaConfig=function(fecha){abrirConfigHorarios(fecha);};
+window.qH=function(hora){CONFIG_HORAS=CONFIG_HORAS.filter(h=>h!==hora);document.getElementById(`ht-fecha-${hora.replace(':','')}`)?.remove();if(!CONFIG_HORAS.length)document.getElementById('hg-fecha').innerHTML='<span id="sinHorasCfg" style="font-size:12px;color:var(--ink-muted)">Todavía no hay horarios.</span>';};
+window.aH=function(){
+  const inp=document.getElementById('nh-fecha');const val=inp.value;if(!val)return;
   const[hh,mm]=val.split(':');const hora=`${hh}:${mm}`;
-  const turno=CICLO.find(t=>t.tipo===tipo);
-  if(turno.horas.includes(hora)){showToast('Esa hora ya existe');return;}
-  turno.horas.push(hora);
-  const tag=document.createElement('div');tag.className='hora-tag';tag.id=`ht-${tipo}-${hora.replace(':','')}`;
-  tag.innerHTML=`${hora}<button class="rm" onclick="qH('${tipo}','${hora}')">×</button>`;
-  document.getElementById(`hg-${tipo}`).appendChild(tag);inp.value='';
+  if(CONFIG_HORAS.includes(hora)){showToast('Esa hora ya existe');return;}
+  CONFIG_HORAS.push(hora);CONFIG_HORAS.sort((a,b)=>horaNum(a)-horaNum(b));
+  document.getElementById('sinHorasCfg')?.remove();
+  const tag=document.createElement('div');tag.className='hora-tag';tag.id=`ht-fecha-${hora.replace(':','')}`;
+  tag.innerHTML=`${hora}<button class="rm" onclick="qH('${hora}')">×</button>`;
+  document.getElementById('hg-fecha').appendChild(tag);inp.value='';
 };
 window.guardarHoras=async function(){
-  try{await db.collection('config').doc('horarios').set({ciclo:CICLO,actualizado:new Date().toISOString()});showToast('Horarios guardados ✓');closeModal();renderAdmin();}
+  try{if(CONFIG_HORAS.length)DISPONIBILIDAD[CONFIG_FECHA]=[...CONFIG_HORAS];else delete DISPONIBILIDAD[CONFIG_FECHA];await db.collection('config').doc('horarios').set({disponibilidad:DISPONIBILIDAD,actualizado:new Date().toISOString()});selectedDate=parseDate(CONFIG_FECHA);showToast('Disponibilidad guardada ✓');closeModal();renderAdmin();}
   catch(e){showToast('Error al guardar');}
 };
 window.closeModal=function(){document.getElementById('modalBg').classList.remove('open');};
@@ -648,15 +644,15 @@ window.syncHoraCustom=function(val){
 function renderCliente(){
   if(!citasLoaded){document.getElementById('appRoot').innerHTML=`<div class="loading-screen"><div class="spinner"></div><div class="loading-txt">Cargando horarios</div></div>`;return;}
   if(miCitaId){const c=citas.find(x=>x.id===miCitaId);if(c&&c.fecha>=dateStr(today)){renderMiCita(c);return;}else{miCitaId=null;localStorage.removeItem('skinlux_mi_cita');}}
-  // Próximos 7 días disponibles
+  // Próximas 7 fechas configuradas manualmente con horas libres
   const dias7=[];let cur=new Date(today);
   while(dias7.length<7){
-    const t=getTurno(cur),cD=citas.filter(c=>c.fecha===dateStr(cur)),lib=t.horas.filter(h=>!cD.some(c=>c.hora===h));
-    if(t.tipo!=='dia'&&lib.length>0)dias7.push(new Date(cur));
-    cur.setDate(cur.getDate()+1);if(dias7.length===0&&cur-today>60*24*60*60*1000)break;
+    const cD=citas.filter(c=>c.fecha===dateStr(cur)),lib=horasFecha(cur).filter(h=>!cD.some(c=>c.hora===h));
+    if(lib.length>0)dias7.push(new Date(cur));
+    cur.setDate(cur.getDate()+1);if(cur-today>180*24*60*60*1000)break;
   }
   if(!dias7.find(d=>dateStr(d)===dateStr(cFecha)))cFecha=dias7[0]||today;
-  const turnoSel=getTurno(cFecha),citasSel=citas.filter(c=>c.fecha===dateStr(cFecha)),hSel=turnoSel.horas.sort((a,b)=>horaNum(a)-horaNum(b));
+  const citasSel=citas.filter(c=>c.fecha===dateStr(cFecha)),hSel=horasFecha(cFecha);
   document.getElementById('appRoot').innerHTML=`
   <div class="cliente-wrap">
     <div class="booking-intro">
@@ -683,7 +679,7 @@ function renderCliente(){
         ${!cServicio?`<div class="reserva-placeholder">Selecciona un servicio a la izquierda para ver los días y horarios disponibles.</div>`:`
         <div class="section-h">2. Elige un día</div>
         <div class="dias-scroll">
-          ${dias7.map(d=>{const cD=citas.filter(c=>c.fecha===dateStr(d));const t=getTurno(d);const lib=t.horas.some(h=>!cD.some(c=>c.hora===h));
+          ${dias7.map(d=>{const cD=citas.filter(c=>c.fecha===dateStr(d));const lib=horasFecha(d).some(h=>!cD.some(c=>c.hora===h));
             return`<button class="dia-btn${dateStr(d)===dateStr(cFecha)?' selected':''}" onclick="sDia('${dateStr(d)}')"><span class="dia-nom">${DIAS[d.getDay()]}</span><span class="dia-num">${d.getDate()}</span>${lib?'<span class="dia-dot"></span>':''}</button>`;}).join('')}
         </div>
         <div class="section-h" style="font-size:15px;margin-bottom:.75rem">Horarios · ${cFecha.getDate()} de ${MESES[cFecha.getMonth()]}</div>
