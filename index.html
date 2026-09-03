@@ -342,9 +342,11 @@ function showToast(msg){const t=document.getElementById('toast');t.textContent=m
 
 // ── INIT ──────────────────────────────────────────────────────
 async function init(){
-  try{const doc=await db.collection('config').doc('horarios').get();if(doc.exists&&doc.data().disponibilidad)DISPONIBILIDAD=doc.data().disponibilidad;}catch(e){}
   db.collection('citas').orderBy('fecha').orderBy('hora').onSnapshot(snap=>{
-    citas=snap.docs.map(d=>({id:d.id,...d.data()}));citasLoaded=true;renderAll();
+    const docs=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const cfg=docs.find(d=>d.id==='__config_horarios__');
+    DISPONIBILIDAD=cfg?.disponibilidad||{};
+    citas=docs.filter(d=>d.id!=='__config_horarios__');citasLoaded=true;renderAll();
   },err=>{citasLoaded=true;renderAll();showToast('Error: '+err.code);});
 }
 init();
@@ -627,8 +629,8 @@ window.aH=function(){
   document.getElementById('hg-fecha').appendChild(tag);inp.value='';
 };
 window.guardarHoras=async function(){
-  try{if(CONFIG_HORAS.length)DISPONIBILIDAD[CONFIG_FECHA]=[...CONFIG_HORAS];else delete DISPONIBILIDAD[CONFIG_FECHA];await db.collection('config').doc('horarios').set({disponibilidad:DISPONIBILIDAD,actualizado:new Date().toISOString()});selectedDate=parseDate(CONFIG_FECHA);showToast('Disponibilidad guardada ✓');closeModal();renderAdmin();}
-  catch(e){showToast('Error al guardar');}
+  try{if(CONFIG_HORAS.length)DISPONIBILIDAD[CONFIG_FECHA]=[...CONFIG_HORAS];else delete DISPONIBILIDAD[CONFIG_FECHA];await db.collection('citas').doc('__config_horarios__').set({disponibilidad:DISPONIBILIDAD,fecha:'0000-00-00',hora:'00:00',tipo:'configuracion',actualizado:new Date().toISOString()});selectedDate=parseDate(CONFIG_FECHA);showToast('Disponibilidad guardada ✓');closeModal();renderAdmin();}
+  catch(e){console.error(e);showToast('No se pudo guardar. Intenta nuevamente.');}
 };
 window.closeModal=function(){document.getElementById('modalBg').classList.remove('open');};
 window.syncHoraCustom=function(val){
