@@ -3,818 +3,779 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda · SKIN LUX by Javiera</title>
+<meta name="description" content="Reserva tu cita en Skin Lux by Javiera. Elige tu tratamiento, revisa el valor y encuentra días y horarios disponibles.">
+<meta name="theme-color" content="#FDFCFA">
+<title>Agenda · Skin Lux by Javiera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --rose: #C97B84; --rose-light: #F4DDE0; --rose-dark: #8B4F57;
-  --gold: #C9A96E; --gold-light: #F5EDDB;
-  --cream: #FAF7F4; --cream-dark: #F0EBE4;
-  --text: #2C1F20; --text-soft: #7A5C60; --text-muted: #B89FA2;
-  --white: #FFFFFF; --border: #E8D8DA; --radius: 12px;
-  --shadow: 0 2px 12px rgba(44,31,32,0.07);
+  --cream:    #EDEAE4;
+  --cream-2:  #E5E1D9;
+  --cream-3:  #F5F3EF;
+  --brown:    #6B3F2A;
+  --brown-2:  #8B5A3C;
+  --brown-lt: #F0E6DF;
+  --gold:     #B8964E;
+  --gold-lt:  #F5EDDA;
+  --ink:      #2A1F18;
+  --ink-soft: #6B5040;
+  --ink-muted:#A08070;
+  --white:    #FDFCFA;
+  --border:   #D9D0C4;
+  --r: 8px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Georgia', serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 15px; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Jost', sans-serif; font-weight: 300; background: var(--cream); color: var(--ink); min-height: 100vh; font-size: 14px; }
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Great+Vibes&display=swap');
+/* HEADER */
 header {
-  background: white;
-  border-bottom: 1px solid var(--border);
-  padding: 0.75rem 1.5rem; display: flex; align-items: center;
+  background: var(--white); border-bottom: 1px solid var(--border);
+  padding: 0 2rem; height: 60px; display: flex; align-items: center;
   justify-content: space-between; position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 1px 8px rgba(44,31,32,0.06);
+  box-shadow: 0 1px 8px rgba(42,31,24,.05);
 }
-.logo { display: flex; align-items: center; }
-.logo-mark { display: none; }
-.logo-text { line-height: 1; }
-.logo-text strong {
-  display: block;
-  font-family: 'Playfair Display', 'Georgia', serif;
-  font-size: 20px;
-  color: #1a1a1a;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.logo-text span {
-  display: block;
-  font-family: 'Great Vibes', cursive;
-  font-size: 20px;
-  color: #C9A96E;
-  line-height: 1.2;
-}
+.logo { text-decoration: none; display: flex; flex-direction: column; gap: 0; line-height: 1; }
+.logo-main { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 19px; letter-spacing: .16em; color: var(--ink); text-transform: uppercase; }
+.logo-sub  { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 13px; color: var(--gold); letter-spacing: .05em; }
 .header-right { display: flex; align-items: center; gap: 10px; }
-.mode-badge { font-size: 11px; font-family: sans-serif; padding: 4px 10px; border-radius: 20px; }
-.mode-badge.admin { background: var(--rose-light); color: var(--rose-dark); }
-.mode-badge.cliente { background: var(--gold-light); color: #7A5A00; }
-.btn { padding: 8px 16px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); color: var(--text); font-size: 13px; font-family: 'Georgia', serif; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
-.btn:hover { background: var(--cream-dark); border-color: var(--rose); }
-.btn-primary { background: var(--rose); color: var(--white); border-color: var(--rose); }
-.btn-primary:hover { background: var(--rose-dark); border-color: var(--rose-dark); }
-.btn-sm { padding: 5px 12px; font-size: 12px; }
+.badge { font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; }
+.badge-admin  { background: var(--brown-lt); color: var(--brown); }
+.badge-client { background: var(--gold-lt); color: #7A5A00; }
+.btn { padding: 7px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--white); color: var(--ink-soft); font-size: 12px; font-family: 'Jost', sans-serif; font-weight: 400; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.btn:hover { background: var(--cream-2); border-color: var(--brown); color: var(--ink); }
+.btn-primary { background: var(--brown); color: var(--white); border-color: var(--brown); font-weight: 500; }
+.btn-primary:hover { background: var(--brown-2); border-color: var(--brown-2); }
+.btn-sm { padding: 5px 12px; font-size: 11px; }
+.btn-ghost { background: none; border-color: transparent; color: var(--ink-muted); }
+.btn-ghost:hover { background: var(--cream-2); border-color: transparent; color: var(--ink); }
+.back-link { font-size: 11px; color: var(--ink-muted); text-decoration: none; letter-spacing: .04em; display: flex; align-items: center; gap: 5px; transition: color .15s; }
+.back-link:hover { color: var(--brown); }
 
 /* LOADING */
-.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; gap: 12px; color: var(--text-muted); font-family: sans-serif; font-size: 13px; }
-.spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--rose); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: calc(100vh - 60px); gap: 14px; color: var(--ink-muted); }
+.spinner { width: 24px; height: 24px; border: 1.5px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin .9s linear infinite; }
+.loading-txt { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* LAYOUT ADMIN */
-.app { display: grid; grid-template-columns: 270px 1fr; min-height: calc(100vh - 65px); }
-.sidebar { background: var(--white); border-right: 1px solid var(--border); padding: 1.25rem; display: flex; flex-direction: column; gap: 1.5rem; overflow-y: auto; }
-.main { padding: 1.5rem; overflow-y: auto; }
-.main-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-.fecha-title { font-size: 20px; color: var(--text); font-weight: normal; }
-.fecha-subtitle { font-size: 13px; color: var(--text-muted); font-family: sans-serif; margin-top: 2px; }
-.view-tabs { display: flex; gap: 4px; background: var(--cream-dark); border-radius: 8px; padding: 3px; }
-.view-tab { padding: 5px 14px; border-radius: 6px; border: none; background: none; font-size: 12px; font-family: sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.view-tab.active { background: var(--white); color: var(--rose-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+/* ADMIN LAYOUT */
+.app { display: grid; grid-template-columns: 256px 1fr; min-height: calc(100vh - 60px); }
+.sidebar { background: var(--white); border-right: 1px solid var(--border); padding: 1.5rem 1.25rem; display: flex; flex-direction: column; gap: 1.75rem; overflow-y: auto; }
+.main { padding: 1.75rem 2rem; overflow-y: auto; }
+.sec-lbl { font-size: 9px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
 
 /* MINI CAL */
-.mini-cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.mini-cal-title { font-size: 12px; color: var(--text-soft); text-transform: uppercase; letter-spacing: 0.08em; font-family: sans-serif; }
-.mini-nav button { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 16px; padding: 2px 5px; border-radius: 4px; }
-.mini-nav button:hover { color: var(--rose); }
-.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-.mini-grid .day-label { font-size: 10px; color: var(--text-muted); font-family: sans-serif; padding: 3px 0; font-weight: 600; }
-.mini-day { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-family: sans-serif; border-radius: 50%; cursor: pointer; color: var(--text-soft); transition: background 0.1s; margin: auto; }
-.mini-day:hover { background: var(--rose-light); color: var(--rose-dark); }
-.mini-day.today { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
-.mini-day.selected { background: var(--rose); color: white; }
+.mini-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.mini-cal-title { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 600; color: var(--ink); }
+.mini-nav { display: flex; gap: 2px; }
+.mini-nav button { background: none; border: none; cursor: pointer; color: var(--ink-muted); font-size: 15px; padding: 2px 6px; border-radius: 4px; }
+.mini-nav button:hover { color: var(--brown); }
+.mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; text-align: center; }
+.mini-grid .dl { font-size: 9px; color: var(--ink-muted); padding: 3px 0; font-weight: 500; }
+.mini-day { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 50%; cursor: pointer; color: var(--ink-soft); margin: auto; transition: background .1s; position: relative; }
+.mini-day:hover { background: var(--brown-lt); }
+.mini-day.today { background: var(--brown-lt); color: var(--brown); font-weight: 500; }
+.mini-day.selected { background: var(--brown); color: white; }
 .mini-day.no-atiende { color: var(--border); cursor: default; }
-.mini-day.no-atiende:hover { background: none; color: var(--border); }
-.mini-day.has-cita { position: relative; }
-.mini-day.has-cita::after { content: ''; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+.mini-day.no-atiende:hover { background: none; }
+.mini-day.has-cita::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; background: var(--gold); border-radius: 50%; }
 .mini-day.empty { cursor: default; }
 
 /* STATS */
-.section-title { font-size: 11px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
-.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .stat-card { background: var(--cream); border-radius: 8px; padding: 10px 12px; text-align: center; }
-.stat-number { font-size: 20px; color: var(--rose-dark); line-height: 1.1; }
-.stat-label { font-size: 10px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.stat-num { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 300; color: var(--brown); line-height: 1; }
+.stat-lbl { font-size: 9px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); margin-top: 3px; }
 
 /* UPCOMING */
-.upcoming-list { display: flex; flex-direction: column; gap: 6px; max-height: 260px; overflow-y: auto; }
-.upcoming-item { background: var(--cream); border-radius: 8px; padding: 8px 10px; border-left: 3px solid var(--rose-light); cursor: pointer; transition: border-color 0.15s; }
-.upcoming-item:hover { border-color: var(--rose); }
-.up-hora { font-size: 11px; color: var(--rose); font-family: sans-serif; font-weight: 600; }
-.up-nombre { font-size: 13px; color: var(--text); }
-.up-servicio { font-size: 11px; color: var(--text-muted); font-family: sans-serif; }
+.upcoming-list { display: flex; flex-direction: column; gap: 5px; max-height: 200px; overflow-y: auto; }
+.upcoming-item { background: var(--cream); border-radius: 7px; padding: 8px 10px; border-left: 2px solid var(--brown-lt); cursor: pointer; transition: border-color .15s; }
+.upcoming-item:hover { border-color: var(--brown); }
+.up-hora { font-size: 10px; font-weight: 500; color: var(--gold); letter-spacing: .03em; }
+.up-nombre { font-size: 12px; color: var(--ink); margin-top: 1px; }
+.up-servicio { font-size: 10px; color: var(--ink-muted); margin-top: 1px; }
+
+/* MAIN HEADER */
+.main-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.5rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+.fecha-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 300; color: var(--ink); }
+.fecha-sub { font-size: 11px; color: var(--ink-muted); margin-top: 3px; letter-spacing: .02em; }
+.main-actions { display: flex; gap: 8px; align-items: center; }
+.view-tabs { display: flex; gap: 2px; background: var(--cream-2); border-radius: 6px; padding: 3px; }
+.view-tab { padding: 5px 14px; border-radius: 4px; border: none; background: none; font-size: 11px; font-family: 'Jost', sans-serif; font-weight: 400; color: var(--ink-muted); cursor: pointer; transition: all .15s; }
+.view-tab.active { background: var(--white); color: var(--brown); font-weight: 500; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 
 /* TURNO BANNER */
-.turno-banner { border-radius: 10px; padding: 12px 16px; margin-bottom: 1rem; font-family: sans-serif; font-size: 13px; display: flex; align-items: center; gap: 10px; }
-.turno-banner.dia { background: #FEF3E2; color: #8A5A00; border: 1px solid #F7C975; }
-.turno-banner.noche { background: #EEF0FB; color: #3A3F8A; border: 1px solid #B0B8E8; }
-.turno-banner.saliente { background: #E8F5EE; color: #2A6845; border: 1px solid #90D4AE; }
-.turno-banner.libre { background: var(--rose-light); color: var(--rose-dark); border: 1px solid var(--rose); }
+.turno-banner { border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; font-size: 13px; font-weight: 300; display: flex; align-items: center; gap: 10px; }
+.turno-banner.dia      { background: #FEF3E2; color: #7A4E00; border: 1px solid #F0D090; }
+.turno-banner.noche    { background: #EEF0FB; color: #353A80; border: 1px solid #A8B0E0; }
+.turno-banner.saliente { background: #EDFAF3; color: #1E5E40; border: 1px solid #80C8A0; }
+.turno-banner.libre    { background: var(--brown-lt); color: var(--brown); border: 1px solid #D8B8A8; }
 
 /* SCHEDULE */
-.schedule-grid { display: flex; flex-direction: column; gap: 2px; }
-.time-slot { display: flex; gap: 12px; min-height: 56px; }
-.time-label { width: 48px; font-size: 11px; color: var(--text-muted); font-family: sans-serif; padding-top: 6px; text-align: right; flex-shrink: 0; }
-.slot-area { flex: 1; border-top: 1px solid var(--border); padding: 4px 0; cursor: pointer; transition: background 0.1s; border-radius: 4px; }
-.slot-area:hover { background: var(--rose-light); }
-.slot-area.has-cita { cursor: default; background: transparent; }
-.slot-area.has-cita:hover { background: transparent; }
-.cita-block { background: var(--rose-light); border-left: 3px solid var(--rose); border-radius: 6px; padding: 8px 12px; margin: 0 4px; cursor: pointer; transition: box-shadow 0.15s; position: relative; }
-.cita-block:hover { box-shadow: var(--shadow); }
-.cita-block.gold { background: var(--gold-light); border-color: var(--gold); }
-.cita-nombre { font-size: 13px; color: var(--text); }
-.cita-servicio { font-size: 11px; color: var(--text-soft); font-family: sans-serif; margin-top: 2px; }
-.cita-tel { font-size: 11px; color: var(--text-muted); font-family: sans-serif; }
-.cita-actions { position: absolute; bottom: 6px; right: 8px; display: flex; gap: 4px; opacity: 1; }
-.cita-actions button { background: white; border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-size: 11px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.1s; }
-.cita-actions button:hover { background: var(--rose); color: white; border-color: var(--rose); }
-.cita-actions button.del:hover { background: #e74c3c; border-color: #e74c3c; }
+.schedule-grid { display: flex; flex-direction: column; }
+.time-slot { display: grid; grid-template-columns: 68px 1fr; min-height: 64px; border-bottom: 1px solid var(--border); }
+.time-slot:last-child { border-bottom: none; }
+.time-label { font-size: 11px; color: var(--ink-muted); padding: 16px 0 0 0; font-weight: 400; letter-spacing: .02em; font-family: 'Cormorant Garamond', serif; font-size: 14px; }
+.slot-area { border-left: 1px solid var(--border); padding: 8px 14px; cursor: pointer; transition: background .1s; min-height: 64px; display: flex; align-items: center; }
+.slot-area:hover { background: var(--cream-2); }
+.slot-area.has-cita { cursor: default; background: none; }
+.slot-hint { font-size: 11px; color: var(--ink-muted); opacity: 0; transition: opacity .1s; }
+.slot-area:hover .slot-hint { opacity: 1; }
+.cita-block { background: var(--brown-lt); border-left: 3px solid var(--brown); border-radius: 0 6px 6px 0; padding: 8px 12px; width: 100%; }
+.cita-block.gold { background: var(--gold-lt); border-color: var(--gold); }
+.cita-nombre { font-size: 13px; color: var(--ink); font-weight: 400; }
+.cita-servicio { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+.cita-tel { font-size: 10px; color: var(--ink-muted); margin-top: 2px; }
+.cita-actions { display: flex; gap: 6px; margin-top: 8px; }
+.cita-actions button { font-size: 10px; padding: 3px 9px; border-radius: 4px; border: 1px solid var(--border); background: var(--white); color: var(--ink-soft); cursor: pointer; font-family: 'Jost', sans-serif; transition: all .12s; }
+.cita-actions button:hover { background: var(--cream-2); }
+.cita-actions button.del { color: #b83030; border-color: #e8c0c0; }
+.cita-actions button.del:hover { background: #fdf0f0; }
+.no-atiende-full { text-align: center; padding: 4rem 1rem; color: var(--ink-muted); }
+.no-atiende-full .icon { font-size: 30px; margin-bottom: 12px; }
 
 /* WEEK */
-.week-grid { display: grid; grid-template-columns: 46px repeat(7, 1fr); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-.week-header { background: var(--cream-dark); padding: 8px 4px; text-align: center; border-bottom: 1px solid var(--border); font-size: 11px; font-family: sans-serif; color: var(--text-muted); line-height: 1.4; }
-.week-header.today-col { background: var(--rose-light); color: var(--rose-dark); font-weight: 600; }
-.week-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 40px; padding: 2px; cursor: pointer; transition: background 0.1s; }
-.week-cell:hover { background: var(--cream); }
-.week-cell.time-col { background: var(--cream-dark); cursor: default; font-size: 10px; font-family: sans-serif; color: var(--text-muted); text-align: right; padding: 4px 5px; display: flex; align-items: flex-start; justify-content: flex-end; }
-.week-cell.time-col:hover { background: var(--cream-dark); }
-.week-cell.bloqueada { background: var(--cream-dark); cursor: not-allowed; opacity: 0.4; }
-.week-cell.bloqueada:hover { background: var(--cream-dark); }
-.week-cita { background: var(--rose-light); border-left: 2px solid var(--rose); border-radius: 3px; padding: 2px 4px; font-size: 10px; font-family: sans-serif; color: var(--rose-dark); overflow: hidden; cursor: pointer; }
+.week-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-height: 52px; padding: 6px; cursor: pointer; transition: background .1s; display: flex; align-items: center; }
+.week-cell:hover { background: var(--cream-2); }
+.week-header { background: var(--cream-2); text-align: center; padding: 10px 4px; font-size: 11px; color: var(--ink-soft); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); letter-spacing: .02em; }
+.week-header.today-col { background: var(--brown-lt); color: var(--brown); }
+.week-cell.time-col { background: var(--cream); cursor: default; font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--ink-muted); justify-content: center; padding: 6px 8px; }
+.week-cell.time-col:hover { background: var(--cream); }
+.week-cell.bloqueada { background: repeating-linear-gradient(135deg,transparent,transparent 4px,var(--cream-2) 4px,var(--cream-2) 8px); cursor: default; opacity: .4; }
+.week-cell.bloqueada:hover { background: repeating-linear-gradient(135deg,transparent,transparent 4px,var(--cream-2) 4px,var(--cream-2) 8px); }
+.week-cita { background: var(--brown-lt); border-left: 2px solid var(--brown); border-radius: 3px; padding: 3px 6px; font-size: 11px; color: var(--ink); width: 100%; cursor: pointer; }
 
-/* NO ATIENDE */
-.no-atiende-full { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem; text-align: center; gap: 8px; color: var(--text-muted); font-family: sans-serif; }
-.no-atiende-full .icon { font-size: 36px; margin-bottom: 6px; }
+/* CLIENTE */
+.cliente-wrap { max-width: 1040px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+.booking-intro { margin-bottom: 1.5rem; }
+.booking-eyebrow { color: var(--gold); font-size: 10px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; margin-bottom: 5px; }
+.booking-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(30px,4vw,44px); font-weight: 300; line-height: 1.05; color: var(--ink); }
+.booking-subtitle { color: var(--ink-soft); font-size: 13px; line-height: 1.6; margin-top: 7px; }
+.reserva-grid { display: grid; grid-template-columns: minmax(280px,.9fr) minmax(360px,1.1fr); gap: 1.25rem; align-items: start; }
+.reserva-panel { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem; box-shadow: 0 8px 30px rgba(42,31,24,.04); }
+.reserva-panel .servicios-list { margin-bottom: 0; }
+.reserva-placeholder { min-height: 290px; display: flex; align-items: center; justify-content: center; text-align: center; color: var(--ink-muted); font-size: 13px; line-height: 1.7; padding: 2rem; }
+.steps { display: flex; gap: 5px; align-items: center; margin-bottom: 2rem; }
+.step { height: 3px; width: 24px; border-radius: 2px; background: var(--border); transition: all .25s; }
+.step.active { width: 40px; background: var(--brown); }
+.step.done { background: var(--brown); opacity: .4; }
+.section-h { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; color: var(--ink); margin-bottom: .75rem; }
 
-/* ── VISTA CLIENTE ── */
-.cliente-wrap { max-width: 520px; margin: 0 auto; padding: 2rem 1rem; }
+/* DÍAS SCROLL */
+.dias-scroll { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 1.75rem; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+.dias-scroll::-webkit-scrollbar { height: 2px; }
+.dias-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.dia-btn { flex-shrink: 0; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; padding: 10px 14px; border-radius: 9px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; transition: all .15s; min-width: 62px; }
+.dia-btn.selected { background: var(--brown); border-color: var(--brown); }
+.dia-btn.selected .dia-nom, .dia-btn.selected .dia-num { color: white; }
+.dia-btn:not(.selected):hover { border-color: var(--brown); background: var(--brown-lt); }
+.dia-nom { font-size: 9px; font-weight: 500; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 4px; }
+.dia-num { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 300; color: var(--ink); line-height: 1; }
+.dia-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; margin-top: 4px; }
+.dia-btn.selected .dia-dot { background: rgba(255,255,255,.6); }
 
-/* SCROLL DE DÍAS */
-.dias-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none; }
-.dias-scroll::-webkit-scrollbar { display: none; }
-.dia-btn {
-  flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
-  gap: 2px; padding: 10px 14px; border-radius: 12px;
-  border: 1.5px solid var(--border); background: var(--white);
-  cursor: pointer; transition: all 0.15s; min-width: 62px; position: relative;
-}
-.dia-btn:hover { border-color: var(--rose); background: var(--rose-light); }
-.dia-btn.sel { background: var(--rose); border-color: var(--rose); }
-.dia-btn-dow { font-size: 10px; font-family: sans-serif; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.dia-btn.sel .dia-btn-dow { color: rgba(255,255,255,0.8); }
-.dia-btn-num { font-size: 20px; font-family: 'Georgia', serif; color: var(--text); line-height: 1; }
-.dia-btn.sel .dia-btn-num { color: white; }
-.dia-btn-mes { font-size: 10px; font-family: sans-serif; color: var(--text-muted); }
-.dia-btn.sel .dia-btn-mes { color: rgba(255,255,255,0.8); }
-.dia-btn-hoy { font-size: 9px; font-family: sans-serif; color: var(--rose); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
-.dia-btn.sel .dia-btn-hoy { color: rgba(255,255,255,0.9); }
-.dia-btn-dot { width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
-.dia-btn.sel .dia-btn-dot { background: white; }
+/* HORAS */
+.horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 1.5rem; }
+.hora-btn { padding: 13px 8px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; color: var(--ink); cursor: pointer; transition: all .15s; text-align: center; }
+.hora-btn:hover { border-color: var(--brown); background: var(--brown-lt); }
+.hora-btn.selected { background: var(--brown); border-color: var(--brown); color: white; }
+.hora-btn.ocupada { background: var(--cream); color: var(--ink-muted); cursor: not-allowed; text-decoration: line-through; opacity: .5; }
 
-.cliente-day-title { font-size: 16px; color: var(--text); margin-bottom: 12px; }
-.horas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
-.hora-btn { padding: 12px 8px; border-radius: 10px; border: 1.5px solid var(--border); background: var(--white); font-size: 15px; font-family: 'Georgia', serif; color: var(--text); cursor: pointer; text-align: center; transition: all 0.15s; }
-.hora-btn:hover { border-color: var(--rose); background: var(--rose-light); color: var(--rose-dark); }
-.hora-btn.ocupada { background: #F5F5F5; color: #CCCCCC; cursor: not-allowed; font-size: 15px; text-decoration: line-through; border-color: #E8E8E8; }
-.hora-btn.ocupada:hover { border-color: #E8E8E8; background: #F5F5F5; color: #CCCCCC; }
-.hora-btn.mi-cita { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); font-weight: 600; }
+/* SERVICIOS */
+.servicios-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+.servicio-card { padding: 14px 16px; border-radius: 9px; border: 1.5px solid var(--border); background: var(--white); cursor: pointer; transition: all .15s; display: flex; justify-content: space-between; align-items: center; }
+.servicio-card:hover { border-color: var(--brown); }
+.servicio-card.selected { border-color: var(--brown); background: var(--brown-lt); }
+.serv-nombre { font-size: 14px; color: var(--ink); font-weight: 400; }
+.serv-dur { font-size: 11px; color: var(--ink-muted); margin-top: 2px; }
+.serv-precio { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--gold); white-space: nowrap; margin-left: 12px; }
+.serv-check { font-size: 15px; color: var(--brown); margin-left: 8px; }
 
-.mi-cita-card { background: var(--rose-light); border: 1.5px solid var(--rose); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-.mi-cita-card h3 { font-size: 14px; color: var(--rose-dark); font-weight: normal; margin-bottom: 8px; font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
-.mi-cita-card p { font-size: 14px; color: var(--text); margin-bottom: 4px; }
-.mi-cita-card .cancel-btn { margin-top: 10px; width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid var(--rose); background: white; color: var(--rose-dark); font-family: sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-.mi-cita-card .cancel-btn:hover { background: var(--rose); color: white; }
+/* FORM */
+.form-group { margin-bottom: 14px; }
+.inp-label { font-size: 10px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 5px; display: block; }
+.inp { width: 100%; padding: 11px 14px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--white); font-size: 14px; font-family: 'Jost', sans-serif; font-weight: 300; color: var(--ink); transition: border-color .15s; }
+.inp:focus { outline: none; border-color: var(--brown); }
+.inp::placeholder { color: var(--ink-muted); }
 
-/* FORMULARIO RESERVA */
-.reserva-form { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; margin-top: 1rem; }
-.reserva-form h3 { font-size: 15px; font-weight: normal; color: var(--text); margin-bottom: 1rem; }
-.form-group { margin-bottom: 12px; }
-.form-label { font-size: 11px; color: var(--text-muted); font-family: sans-serif; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 4px; }
-.form-input, .form-select { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; font-family: 'Georgia', serif; color: var(--text); background: var(--white); outline: none; transition: border-color 0.15s; }
-.form-input:focus, .form-select:focus { border-color: var(--rose); }
-.servicios-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 4px; }
-.servicio-pill { padding: 7px 10px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 12px; font-family: sans-serif; cursor: pointer; text-align: center; color: var(--text-soft); transition: all 0.15s; background: var(--white); }
-.servicio-pill:hover, .servicio-pill.selected { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); }
+/* CONFIRM */
+.confirm-box { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; }
+.confirm-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; font-size: 13px; }
+.confirm-row:last-child { margin-bottom: 0; }
+.confirm-lbl { color: var(--ink-muted); font-size: 11px; letter-spacing: .04em; }
+.confirm-val { color: var(--ink); font-weight: 400; text-align: right; }
+.confirm-sep { height: 1px; background: var(--border); margin: 10px 0; }
 
-/* MODAL ADMIN */
-.modal-overlay { position: fixed; inset: 0; background: rgba(44,31,32,0.4); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-.modal-overlay.hidden { display: none; }
-.modal { background: var(--white); border-radius: var(--radius); padding: 1.75rem; width: 100%; max-width: 420px; box-shadow: 0 8px 32px rgba(44,31,32,0.15); max-height: 90vh; overflow-y: auto; }
-.modal-title { font-size: 17px; color: var(--text); margin-bottom: 1rem; font-weight: normal; }
-.modal-footer { display: flex; gap: 8px; justify-content: flex-end; margin-top: 1rem; }
-.hora-options { display: flex; flex-wrap: wrap; gap: 8px; }
-.hora-pill { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); font-size: 13px; font-family: sans-serif; cursor: pointer; color: var(--text-soft); transition: all 0.15s; background: var(--white); }
-.hora-pill:hover, .hora-pill.selected { background: var(--rose-light); border-color: var(--rose); color: var(--rose-dark); }
-.hora-pill.ocupada { background: var(--cream-dark); color: var(--text-muted); cursor: not-allowed; text-decoration: line-through; }
-.hora-pill.ocupada:hover { background: var(--cream-dark); border-color: var(--border); color: var(--text-muted); }
+/* MI CITA */
+.mi-cita-card { background: var(--brown-lt); border: 1.5px solid var(--brown); border-radius: 10px; padding: 20px; margin-bottom: 1.5rem; }
+.mi-cita-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; color: var(--brown); margin-bottom: 12px; }
+
+/* MODAL */
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(42,31,24,.45); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-bg.open { display: flex; }
+.modal { background: var(--white); border-radius: 12px; padding: 2rem; width: 100%; max-width: 440px; max-height: 90vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(42,31,24,.18); }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; margin-bottom: 1.25rem; color: var(--ink); }
+.modal-row { margin-bottom: 14px; }
+.modal-actions { display: flex; gap: 8px; margin-top: 1.5rem; justify-content: flex-end; }
+
+/* CONFIG HORARIOS */
+.horas-config-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+.hora-tag { display: flex; align-items: center; gap: 5px; background: var(--cream); border: 1px solid var(--border); border-radius: 5px; padding: 5px 10px; font-size: 12px; color: var(--ink-soft); }
+.hora-tag .rm { background: none; border: none; cursor: pointer; color: var(--ink-muted); font-size: 15px; line-height: 1; padding: 0 2px; }
+.hora-tag .rm:hover { color: #b83030; }
+.add-hora-row { display: flex; gap: 8px; align-items: center; }
+.turno-cfg { margin-bottom: 1.5rem; }
+.turno-cfg-title { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
 
 /* LOGIN */
-.login-wrap { max-width: 340px; margin: 4rem auto; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); padding: 2rem; text-align: center; }
-.login-wrap h2 { font-size: 18px; font-weight: normal; margin-bottom: 6px; }
-.login-wrap p { font-size: 13px; color: var(--text-muted); font-family: sans-serif; margin-bottom: 1.25rem; }
-.pin-inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 1rem; }
-.pin-inputs input { width: 44px; height: 52px; text-align: center; font-size: 22px; font-family: 'Georgia', serif; border: 1.5px solid var(--border); border-radius: 8px; outline: none; transition: border-color 0.15s; }
-.pin-inputs input:focus { border-color: var(--rose); }
-.login-err { font-size: 12px; color: #e74c3c; font-family: sans-serif; margin-bottom: 8px; min-height: 16px; }
+.login-wrap { max-width: 300px; margin: 5rem auto; text-align: center; padding: 2.5rem 2rem; background: var(--white); border-radius: 12px; box-shadow: 0 8px 32px rgba(42,31,24,.08); }
+.login-wrap h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; margin-bottom: 6px; }
+.login-wrap p { font-size: 12px; color: var(--ink-muted); margin-bottom: 1.5rem; }
+.pin-inputs { display: flex; gap: 10px; justify-content: center; margin-bottom: 1rem; }
+.pin-inputs input { width: 48px; height: 54px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--cream); text-align: center; font-size: 22px; font-family: 'Cormorant Garamond', serif; outline: none; }
+.pin-inputs input:focus { border-color: var(--brown); background: var(--white); }
+.login-err { font-size: 12px; color: #b83030; min-height: 16px; margin-bottom: 10px; }
 
 /* TOAST */
-.toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--text); color: var(--white); padding: 10px 18px; border-radius: 8px; font-size: 13px; font-family: sans-serif; z-index: 300; transform: translateY(80px); opacity: 0; transition: all 0.3s; }
-.toast.show { transform: translateY(0); opacity: 1; }
+.toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(12px); background: var(--ink); color: white; padding: 10px 20px; border-radius: 8px; font-size: 12px; opacity: 0; transition: all .25s; pointer-events: none; z-index: 300; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-@media (max-width: 680px) {
+/* DIVIDER ✦ */
+.divider { display: flex; align-items: center; gap: 10px; margin: 6px 0 14px; color: var(--gold); font-size: 10px; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+@media (max-width: 640px) {
   .app { grid-template-columns: 1fr; }
   .sidebar { display: none; }
-  .horas-grid { grid-template-columns: repeat(2, 1fr); }
-  .servicios-grid { grid-template-columns: repeat(2, 1fr); }
+  .main { padding: 1.25rem; }
+  .cliente-wrap { padding: 1.5rem 1rem; }
+  .reserva-grid { grid-template-columns: 1fr; }
+  header { padding: 0 .85rem; }
+  .badge { display: none; }
+  .back-link { font-size: 0; }
+  .back-link::after { content: '← Sitio'; font-size: 11px; }
+  .logo-main { font-size: 17px; }
+  .logo-sub { font-size: 12px; }
+  .reserva-panel { padding: 1rem; }
 }
 </style>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("A89FvqhG00KPy4fXk");</script>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-text">
-      <strong>SKIN LUX</strong>
-      <span>by Javiera</span>
-    </div>
-  </div>
+  <a href="https://skin-lux.cl" class="back-link">← Skin Lux</a>
+  <a href="https://agenda.skin-lux.cl" class="logo">
+    <span class="logo-main">Skin Lux</span>
+    <span class="logo-sub">by Javiera</span>
+  </a>
   <div class="header-right">
-    <span class="mode-badge" id="modeBadge"></span>
-    <button class="btn btn-sm" id="btnModo" onclick="toggleModo()"></button>
+    <span class="badge badge-client" id="modeBadge">Reservar</span>
+    <button class="btn btn-sm" id="btnModo" onclick="toggleModo()">Admin</button>
   </div>
 </header>
 
-<div id="appRoot"></div>
-<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModalOutside(event)">
-  <div class="modal">
-    <div class="modal-title" id="modalTitulo">Nueva cita</div>
-    <div class="form-group">
-      <label class="form-label">Servicio</label>
-      <div class="servicios-grid" id="adminServiciosGrid"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nombre cliente</label>
-      <input class="form-input" id="fNombre" type="text" placeholder="Nombre completo" autocomplete="off">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Teléfono</label>
-      <input class="form-input" id="fTelefono" type="tel" placeholder="+56 9 ...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Fecha</label>
-      <input class="form-input" id="fFecha" type="date" onchange="actualizarHorasModal()">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Hora</label>
-      <div class="hora-options" id="horaOptions"></div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Notas</label>
-      <input class="form-input" id="fNotas" type="text" placeholder="Indicaciones, alergias, etc.">
-    </div>
-    <div class="modal-footer" id="modalFooter">
-      <button class="btn" onclick="closeModal()">Cancelar</button>
-      <button class="btn" id="btnEliminarModal" style="display:none;border-color:#e74c3c;color:#e74c3c" onclick="eliminarDesdModal()">Eliminar</button>
-      <button class="btn btn-primary" onclick="guardarCitaAdmin()">Guardar</button>
-    </div>
+<div id="appRoot">
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <div class="loading-txt">Cargando horarios</div>
   </div>
+</div>
+
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- EmailJS SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script>emailjs.init("A89FvqhG00KPy4fXk");</script>
-
-<!-- Firebase SDK (compat — funciona en Safari iOS y en iframes srcdoc) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
+// ── Firebase ──────────────────────────────────────────────────
 const firebaseConfig = {
-  apiKey: "AIzaSyCkxmV_LhuuEvUwNhNhiiOfnUNWBDw1-b0",
-  authDomain: "skinlux-agenda.firebaseapp.com",
-  projectId: "skinlux-agenda",
-  storageBucket: "skinlux-agenda.firebasestorage.app",
-  messagingSenderId: "361386858959",
-  appId: "1:361386858959:web:12f9a3dae558e7a12b5aba"
+  apiKey:"AIzaSyCkxmV_LhuuEvUwNhNhiiOfnUNWBDw1-b0",
+  authDomain:"skinlux-agenda.firebaseapp.com",
+  projectId:"skinlux-agenda",
+  storageBucket:"skinlux-agenda.firebasestorage.app",
+  messagingSenderId:"361386858959",
+  appId:"1:361386858959:web:12f9a3dae558e7a12b5aba"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-window._db = db;
 
-// ─── CONSTANTES ──────────────────────────────────────────────────
-const CICLO_INICIO = new Date(2026, 7, 5);
-const CICLO = [
-  { nombre: 'Turno día',      tipo: 'dia',      horas: [] },
-  { nombre: 'Turno noche',    tipo: 'noche',    horas: ['11:00','13:00','15:00'] },
-  { nombre: 'Saliente noche', tipo: 'saliente', horas: ['15:00','17:00','19:00'] },
-  { nombre: 'Libre',          tipo: 'libre',    horas: ['11:00','13:00','15:00','17:00','19:00','21:00'] },
-];
-const TURNO_ICONS = { dia:'🌞', noche:'🌙', saliente:'🌅', libre:'✨' };
+// ── SERVICIOS (del catálogo real) ─────────────────────────────
 const SERVICIOS = [
-  {nombre:'Limpieza Facial',duracion:60,color:'rose'},
-  {nombre:'Pink Glow',duracion:60,color:'rose'},
-  {nombre:'Peeling',duracion:45,color:'gold'},
-  {nombre:'Vitamina C',duracion:60,color:'gold'},
+  { nombre:'Limpieza Facial Profunda',    duracion:'60 min',      precio:'$45.000', color:'brown' },
+  { nombre:'Ritual Facial Premium',       duracion:'90–120 min',  precio:'$59.900', color:'gold'  },
+  { nombre:'Dermaplaning',                duracion:'45 min',      precio:'$25.000', color:'brown' },
+  { nombre:'Microneedling + Pink Glow',   duracion:'60–90 min',   precio:'$55.000', color:'gold'  },
+  { nombre:'Microneedling + Vitamina C',  duracion:'60–90 min',   precio:'$45.000', color:'gold'  },
+  { nombre:'Peeling Químico',             duracion:'60–90 min',   precio:'$50.000', color:'brown' },
+  { nombre:'Lifting de Pestañas',         duracion:'60 min',      precio:'$30.000', color:'brown' },
 ];
-const DIAS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-const MESES_CAP = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+// ── CICLO TURNOS (editable desde admin) ───────────────────────
+const CICLO_INICIO = new Date(2026,7,5);
+let CICLO = [
+  { nombre:'Turno día',      tipo:'dia',      horas:[] },
+  { nombre:'Turno noche',    tipo:'noche',    horas:['11:00','13:00','15:00'] },
+  { nombre:'Saliente noche', tipo:'saliente', horas:['15:00','17:00','19:00'] },
+  { nombre:'Libre',          tipo:'libre',    horas:['10:00','11:00','13:00','15:00','17:00','19:00'] },
+];
+const TURNO_ICONS = { dia:'☀️', noche:'🌙', saliente:'🌅', libre:'✦' };
+const DIAS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const DIASL  = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const MESES  = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_C= ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const ADMIN_PIN = '0905';
 
-// ─── ESTADO ──────────────────────────────────────────────────────
-let modo = 'cliente'; // 'admin' | 'cliente'
-let adminAuth = false;
-let today = new Date(); today.setHours(0,0,0,0);
-let selectedDate = new Date(today);
-let calViewDate = new Date(today.getFullYear(), today.getMonth(), 1);
-let currentView = 'dia';
-let citas = [];
-let citasLoaded = false;
-let editId = null;
-let selServicioAdmin = null;
-let selHoraAdmin = null;
-// cliente
-let clienteSelFecha = new Date(today);
-let clienteCalView = new Date(today.getFullYear(), today.getMonth(), 1);
-let clienteSelHora = null;
-let clienteSelServicio = null;
-let miCitaId = localStorage.getItem('skinlux_mi_cita') || null;
+// ── ESTADO ────────────────────────────────────────────────────
+let modo='cliente', adminAuth=false;
+let today=new Date(); today.setHours(0,0,0,0);
+let selectedDate=new Date(today), calViewDate=new Date(today.getFullYear(),today.getMonth(),1);
+let currentView='dia', citas=[], citasLoaded=false, editId=null;
+let cStep=1, cFecha=new Date(today), cHora=null, cServicio=null;
+let miCitaId=localStorage.getItem('skinlux_mi_cita')||null;
 
-// ─── HELPERS ─────────────────────────────────────────────────────
-function getTurno(date) {
-  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const ref = new Date(CICLO_INICIO.getFullYear(), CICLO_INICIO.getMonth(), CICLO_INICIO.getDate());
-  const diff = Math.round((d - ref) / 86400000);
-  return CICLO[((diff % 4) + 4) % 4];
-}
-function dateStr(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function showToast(msg) {
-  const t=document.getElementById('toast'); t.textContent=msg;
-  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800);
-}
-window.showToast = showToast;
+// ── HELPERS ───────────────────────────────────────────────────
+function getTurno(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const ref=new Date(CICLO_INICIO.getFullYear(),CICLO_INICIO.getMonth(),CICLO_INICIO.getDate());const diff=Math.round((d-ref)/86400000);return CICLO[((diff%4)+4)%4];}
+function dateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseDate(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function horaNum(h){const[hh,mm]=h.split(':').map(Number);return hh*60+mm;}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
 
-// ─── FIRESTORE LISTENER ──────────────────────────────────────────
-db.collection('citas').orderBy('fecha').orderBy('hora').onSnapshot(snap => {
-  citas = snap.docs.map(d=>({id:d.id,...d.data()}));
-  citasLoaded = true;
-  renderAll();
-}, err => {
-  console.error('Firestore error:', err);
-  citasLoaded = true;
-  renderAll();
-  showToast('Error al conectar con Firebase: ' + err.code);
-});
-
-// ─── MODO ─────────────────────────────────────────────────────────
-window.toggleModo = function() {
-  if(modo==='cliente') { showLogin(); }
-  else { modo='cliente'; adminAuth=false; updateHeader(); renderAll(); }
-};
-function updateHeader() {
-  const badge=document.getElementById('modeBadge');
-  const btn=document.getElementById('btnModo');
-  if(modo==='admin'){ badge.textContent='Admin'; badge.className='mode-badge admin'; btn.textContent='Salir'; }
-  else { badge.textContent='Vista cliente'; badge.className='mode-badge cliente'; btn.textContent='Admin'; }
+// ── INIT ──────────────────────────────────────────────────────
+async function init(){
+  try{const doc=await db.collection('config').doc('horarios').get();if(doc.exists&&doc.data().ciclo)CICLO=doc.data().ciclo;}catch(e){}
+  db.collection('citas').orderBy('fecha').orderBy('hora').onSnapshot(snap=>{
+    citas=snap.docs.map(d=>({id:d.id,...d.data()}));citasLoaded=true;renderAll();
+  },err=>{citasLoaded=true;renderAll();showToast('Error: '+err.code);});
 }
+init();
+
+function updateHeader(){
+  const badge=document.getElementById('modeBadge'),btn=document.getElementById('btnModo');
+  if(modo==='admin'){badge.textContent='Admin';badge.className='badge badge-admin';btn.textContent='Salir';}
+  else{badge.textContent='Reservar';badge.className='badge badge-client';btn.textContent='Admin';}
+}
+window.toggleModo=function(){if(modo==='cliente')showLogin();else{modo='cliente';adminAuth=false;updateHeader();renderAll();}};
 updateHeader();
 
-// ─── LOGIN ───────────────────────────────────────────────────────
-function showLogin() {
-  const root=document.getElementById('appRoot');
-  root.innerHTML=`<div class="login-wrap">
-    <h2>Acceso administrador</h2>
-    <p>Ingresa el PIN de Javi</p>
-    <div class="pin-inputs">
-      <input type="password" maxlength="1" id="p0" oninput="pinNext(0)" inputmode="numeric">
-      <input type="password" maxlength="1" id="p1" oninput="pinNext(1)" inputmode="numeric">
-      <input type="password" maxlength="1" id="p2" oninput="pinNext(2)" inputmode="numeric">
-      <input type="password" maxlength="1" id="p3" oninput="pinNext(3)" inputmode="numeric">
-    </div>
-    <div class="login-err" id="loginErr"></div>
-    <button class="btn btn-primary" style="width:100%" onclick="checkPin()">Entrar</button>
+// ── LOGIN ─────────────────────────────────────────────────────
+function showLogin(){
+  document.getElementById('appRoot').innerHTML=`
+  <div class="login-wrap">
+    <h2>Acceso</h2><p>PIN de Javiera</p>
+    <div class="pin-inputs">${[0,1,2,3].map(i=>`<input type="password" maxlength="1" id="p${i}" oninput="pN(${i})" inputmode="numeric">`).join('')}</div>
+    <div class="login-err" id="le"></div>
+    <button class="btn btn-primary" style="width:100%;padding:11px" onclick="checkPin()">Entrar</button>
   </div>`;
-  setTimeout(()=>document.getElementById('p0').focus(),100);
+  setTimeout(()=>document.getElementById('p0').focus(),80);
 }
-window.pinNext = function(i) {
-  const val=document.getElementById('p'+i).value;
-  if(val&&i<3) document.getElementById('p'+(i+1)).focus();
-  if(i===3&&val) checkPin();
-};
-window.checkPin = function() {
-  const pin=[0,1,2,3].map(i=>document.getElementById('p'+i)?.value||'').join('');
-  if(pin===ADMIN_PIN){ modo='admin'; adminAuth=true; updateHeader(); renderAll(); }
-  else { document.getElementById('loginErr').textContent='PIN incorrecto'; }
-};
+window.pN=function(i){const v=document.getElementById('p'+i).value;if(v&&i<3)document.getElementById('p'+(i+1)).focus();if(i===3&&v)checkPin();};
+window.checkPin=function(){const pin=[0,1,2,3].map(i=>document.getElementById('p'+i)?.value||'').join('');if(pin===ADMIN_PIN){modo='admin';adminAuth=true;updateHeader();renderAll();}else document.getElementById('le').textContent='PIN incorrecto';};
 
-// ─── RENDER PRINCIPAL ────────────────────────────────────────────
-window.renderAll = function() {
-  if(modo==='admin') renderAdmin();
-  else renderCliente();
-};
+window.renderAll=function(){if(modo==='admin')renderAdmin();else renderCliente();};
 
-// ════════════════════════════════════════════════════════════════
-// VISTA ADMIN
-// ════════════════════════════════════════════════════════════════
-function renderAdmin() {
-  const root=document.getElementById('appRoot');
-  root.innerHTML=`
+// ══════════════════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════════════════
+function renderAdmin(){
+  document.getElementById('appRoot').innerHTML=`
   <div class="app">
     <aside class="sidebar">
       <div>
-        <div class="mini-cal-header">
-          <span class="mini-cal-title" id="miniCalTitle"></span>
-          <div class="mini-nav">
-            <button onclick="cambiarMes(-1)">‹</button>
-            <button onclick="cambiarMes(1)">›</button>
-          </div>
+        <div class="mini-nav-row">
+          <span class="mini-cal-title" id="mCalTitle"></span>
+          <div class="mini-nav"><button onclick="cambiarMes(-1)">‹</button><button onclick="cambiarMes(1)">›</button></div>
         </div>
         <div class="mini-grid" id="miniGrid"></div>
       </div>
       <div>
-        <div class="section-title">Este mes</div>
-        <div class="stats">
-          <div class="stat-card"><div class="stat-number" id="statMes">0</div><div class="stat-label">Citas</div></div>
-          <div class="stat-card"><div class="stat-number" id="statHoy">0</div><div class="stat-label">Hoy</div></div>
+        <div class="sec-lbl">Resumen</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" id="sMes">0</div><div class="stat-lbl">Este mes</div></div>
+          <div class="stat-card"><div class="stat-num" id="sHoy">0</div><div class="stat-lbl">Hoy</div></div>
         </div>
       </div>
       <div>
-        <div class="section-title">Próximas citas</div>
-        <div class="upcoming-list" id="upcomingList"></div>
+        <div class="sec-lbl">Próximas citas</div>
+        <div class="upcoming-list" id="upList"></div>
+      </div>
+      <div style="margin-top:auto">
+        <button class="btn" style="width:100%;font-size:11px;color:var(--ink-soft)" onclick="abrirConfigHorarios()">✦ Configurar horarios</button>
       </div>
     </aside>
     <main class="main">
       <div class="main-header">
-        <div>
-          <div class="fecha-title" id="fechaTitle"></div>
-          <div class="fecha-subtitle" id="fechaSubtitle"></div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
+        <div><div class="fecha-title" id="fTitle"></div><div class="fecha-sub" id="fSub"></div></div>
+        <div class="main-actions">
           <button class="btn btn-primary btn-sm" onclick="openModalAdmin()">+ Nueva cita</button>
           <div class="view-tabs">
-            <button class="view-tab ${currentView==='dia'?'active':''}" onclick="setView('dia')">Día</button>
-            <button class="view-tab ${currentView==='semana'?'active':''}" onclick="setView('semana')">Semana</button>
+            <button class="view-tab ${currentView==='dia'?'active':''}" onclick="sView('dia')">Día</button>
+            <button class="view-tab ${currentView==='semana'?'active':''}" onclick="sView('semana')">Semana</button>
           </div>
         </div>
       </div>
-      <div id="vistaDia" style="${currentView==='dia'?'':'display:none'}"></div>
-      <div id="vistaSemana" style="${currentView==='semana'?'':'display:none'}"></div>
+      <div id="vDia" style="${currentView==='dia'?'':'display:none'}"></div>
+      <div id="vSem" style="${currentView==='semana'?'':'display:none'}"></div>
     </main>
   </div>`;
-  renderMiniCal(); renderStats(); renderUpcoming();
-  if(currentView==='dia') renderDia(); else renderSemana();
+  renderMiniCal();renderStats();renderUpcoming();
+  if(currentView==='dia')renderDia();else renderSemana();
 }
+window.sView=function(v){currentView=v;renderAdmin();};
+window.cambiarMes=function(d){calViewDate.setMonth(calViewDate.getMonth()+d);renderMiniCal();};
 
-window.setView = function(v) { currentView=v; renderAdmin(); };
-window.cambiarMes = function(dir) { calViewDate.setMonth(calViewDate.getMonth()+dir); renderMiniCal(); };
-
-function renderMiniCal() {
-  const el=document.getElementById('miniCalTitle'); if(!el) return;
-  const year=calViewDate.getFullYear(), month=calViewDate.getMonth();
-  el.textContent=MESES_CAP[month]+' '+year;
-  const grid=document.getElementById('miniGrid'); grid.innerHTML='';
-  ['L','M','M','J','V','S','D'].forEach(d=>{const e=document.createElement('div');e.className='day-label';e.textContent=d;grid.appendChild(e);});
-  const firstDay=new Date(year,month,1);
-  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
-  const dim=new Date(year,month+1,0).getDate();
-  const tStr=dateStr(today), sStr=dateStr(selectedDate);
-  for(let i=0;i<startDow;i++){const e=document.createElement('div');e.className='mini-day empty';grid.appendChild(e);}
+function renderMiniCal(){
+  const el=document.getElementById('mCalTitle');if(!el)return;
+  const y=calViewDate.getFullYear(),m=calViewDate.getMonth();
+  el.textContent=MESES_C[m]+' '+y;
+  const g=document.getElementById('miniGrid');g.innerHTML='';
+  ['L','M','M','J','V','S','D'].forEach(d=>{const e=document.createElement('div');e.className='dl';e.textContent=d;g.appendChild(e);});
+  const fd=new Date(y,m,1);let sd=fd.getDay();sd=sd===0?6:sd-1;
+  const dim=new Date(y,m+1,0).getDate();
+  const tS=dateStr(today),sS=dateStr(selectedDate);
+  for(let i=0;i<sd;i++){const e=document.createElement('div');e.className='mini-day empty';g.appendChild(e);}
   for(let d=1;d<=dim;d++){
-    const dStr2=year+'-'+String(month+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    const dt=new Date(year,month,d); const turno=getTurno(dt);
-    const e=document.createElement('div'); e.className='mini-day'; e.textContent=d;
-    if(dStr2===tStr) e.classList.add('today');
-    if(dStr2===sStr) e.classList.add('selected');
-    if(turno.tipo==='dia') e.classList.add('no-atiende');
-    if(citas.some(c=>c.fecha===dStr2)) e.classList.add('has-cita');
-    if(turno.tipo!=='dia') e.onclick=()=>{selectedDate=new Date(year,month,d);renderAdmin();};
-    grid.appendChild(e);
+    const dt=new Date(y,m,d),t=getTurno(dt),dS=dateStr(dt);
+    const e=document.createElement('div');e.className='mini-day';e.textContent=d;
+    if(dS===tS)e.classList.add('today');if(dS===sS)e.classList.add('selected');
+    if(t.tipo==='dia')e.classList.add('no-atiende');
+    if(citas.some(c=>c.fecha===dS))e.classList.add('has-cita');
+    if(t.tipo!=='dia')e.onclick=()=>{selectedDate=new Date(y,m,d);renderAdmin();};
+    g.appendChild(e);
   }
 }
-function renderStats() {
-  const mes=selectedDate.getMonth(), anio=selectedDate.getFullYear();
-  const sm=document.getElementById('statMes'), sh=document.getElementById('statHoy');
-  if(!sm) return;
-  sm.textContent=citas.filter(c=>{const d=parseDate(c.fecha);return d.getMonth()===mes&&d.getFullYear()===anio;}).length;
+function renderStats(){
+  const sm=document.getElementById('sMes'),sh=document.getElementById('sHoy');if(!sm)return;
+  const ms=selectedDate.getMonth(),an=selectedDate.getFullYear();
+  sm.textContent=citas.filter(c=>{const d=parseDate(c.fecha);return d.getMonth()===ms&&d.getFullYear()===an;}).length;
   sh.textContent=citas.filter(c=>c.fecha===dateStr(selectedDate)).length;
 }
-function renderUpcoming() {
-  const ul=document.getElementById('upcomingList'); if(!ul) return;
-  const tStr=dateStr(today);
-  const prox=citas.filter(c=>c.fecha>=tStr).slice(0,6);
+function renderUpcoming(){
+  const ul=document.getElementById('upList');if(!ul)return;
+  const tS=dateStr(today),prox=citas.filter(c=>c.fecha>=tS).slice(0,5);
   ul.innerHTML='';
-  if(!prox.length){ul.innerHTML='<div style="font-size:12px;color:var(--text-muted);font-family:sans-serif;text-align:center;padding:10px 0">Sin citas próximas</div>';return;}
+  if(!prox.length){ul.innerHTML='<div style="font-size:11px;color:var(--ink-muted);text-align:center;padding:8px 0">Sin citas próximas</div>';return;}
   prox.forEach(c=>{
-    const d=parseDate(c.fecha); const dStr2=dateStr(d);
-    const lbl=dStr2===tStr?'Hoy':DIAS_ES[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);
-    const el=document.createElement('div'); el.className='upcoming-item';
+    const d=parseDate(c.fecha),dS=dateStr(d);
+    const lbl=dS===tS?'Hoy':DIAS[d.getDay()]+' '+d.getDate()+'/'+(d.getMonth()+1);
+    const el=document.createElement('div');el.className='upcoming-item';
     el.innerHTML=`<div class="up-hora">${lbl} · ${c.hora}</div><div class="up-nombre">${c.nombre}</div><div class="up-servicio">${c.servicio}</div>`;
     el.onclick=()=>{selectedDate=new Date(d);currentView='dia';renderAdmin();};
     ul.appendChild(el);
   });
 }
-
-function renderDia() {
-  const dStr=dateStr(selectedDate);
-  const turno=getTurno(selectedDate);
-  const citasHoy=citas.filter(c=>c.fecha===dStr);
-  const dow=DIAS_ES[selectedDate.getDay()];
-  document.getElementById('fechaTitle').textContent=dow+', '+selectedDate.getDate()+' de '+MESES_ES[selectedDate.getMonth()]+' de '+selectedDate.getFullYear();
-  document.getElementById('fechaSubtitle').textContent=turno.tipo==='dia'?turno.nombre+' — sin atención':turno.nombre+' · '+turno.horas.length+' horarios';
-  const cont=document.getElementById('vistaDia'); cont.innerHTML='';
-  const msgs={dia:'Javi tiene <strong>turno día</strong> en el hospital — sin atención Skin Lux.',noche:'Javi tiene <strong>turno noche</strong> — atiende antes de entrar al turno.',saliente:'Javi <strong>sale de turno noche</strong> — atiende en la tarde.',libre:'Javi está <strong>libre</strong> — disponible todo el día.'};
-  cont.innerHTML+=`<div class="turno-banner ${turno.tipo}"><span style="font-size:18px">${TURNO_ICONS[turno.tipo]}</span><span>${msgs[turno.tipo]}</span></div>`;
+function renderDia(){
+  const dS=dateStr(selectedDate),turno=getTurno(selectedDate);
+  const citasHoy=citas.filter(c=>c.fecha===dS);
+  document.getElementById('fTitle').textContent=DIASL[selectedDate.getDay()]+', '+selectedDate.getDate()+' de '+MESES[selectedDate.getMonth()];
+  document.getElementById('fSub').textContent=turno.tipo==='dia'?turno.nombre+' — sin atención':turno.nombre+' · '+turno.horas.length+' horarios';
+  const cont=document.getElementById('vDia');cont.innerHTML='';
+  const msgs={dia:'Javi tiene <strong>turno día</strong> — sin atención Skin Lux.',noche:'Javi tiene <strong>turno noche</strong> — atiende antes de entrar al turno.',saliente:'Javi <strong>sale de turno noche</strong> — atiende en la tarde.',libre:'Javi está <strong>libre</strong> — disponible todo el día.'};
+  cont.innerHTML+=`<div class="turno-banner ${turno.tipo}"><span>${TURNO_ICONS[turno.tipo]}</span><span>${msgs[turno.tipo]}</span></div>`;
   if(turno.tipo==='dia'){cont.innerHTML+=`<div class="no-atiende-full"><div class="icon">🏥</div><p>Sin atención hoy.</p></div>`;return;}
-  const grid=document.createElement('div'); grid.className='schedule-grid';
-  turno.horas.forEach(hora=>{
-    const slot=document.createElement('div'); slot.className='time-slot';
-    const lbl=document.createElement('div'); lbl.className='time-label'; lbl.textContent=hora;
-    slot.appendChild(lbl);
-    const area=document.createElement('div'); area.className='slot-area';
+  const grid=document.createElement('div');grid.className='schedule-grid';
+  turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).forEach(hora=>{
+    const slot=document.createElement('div');slot.className='time-slot';
+    const lbl=document.createElement('div');lbl.className='time-label';lbl.textContent=hora;slot.appendChild(lbl);
+    const area=document.createElement('div');area.className='slot-area';
     const cita=citasHoy.find(c=>c.hora===hora);
     if(cita){
       area.classList.add('has-cita');
       const serv=SERVICIOS.find(s=>s.nombre===cita.servicio)||SERVICIOS[0];
       const block=document.createElement('div');
       block.className='cita-block'+(serv.color==='gold'?' gold':'');
-      block.innerHTML=`<div class="cita-nombre">${cita.nombre}</div><div class="cita-servicio">${cita.servicio}</div>${cita.telefono?`<div class="cita-tel">${cita.telefono}</div>`:''}<div class="cita-actions"><button onclick="editarCitaAdmin('${cita.id}')">Editar</button><button class="del" onclick="eliminarCita('${cita.id}')">Eliminar</button></div>`;
+      block.innerHTML=`<div class="cita-nombre">${cita.nombre}</div><div class="cita-servicio">${cita.servicio}</div>${cita.telefono?`<div class="cita-tel">${cita.telefono}</div>`:''}<div class="cita-actions"><button onclick="editarCita('${cita.id}')">Editar</button><button class="del" onclick="eliminarCita('${cita.id}')">Eliminar</button></div>`;
       area.appendChild(block);
-    } else {
-      area.onclick=()=>openModalAdmin(hora);
+    }else{
+      area.innerHTML=`<span class="slot-hint">+ Agregar cita</span>`;area.onclick=()=>openModalAdmin(hora);
     }
-    slot.appendChild(area); grid.appendChild(slot);
+    slot.appendChild(area);grid.appendChild(slot);
   });
   cont.appendChild(grid);
 }
-
-function renderSemana() {
-  const dow=selectedDate.getDay(); const diffLun=dow===0?-6:1-dow;
-  const lunes=new Date(selectedDate); lunes.setDate(selectedDate.getDate()+diffLun);
-  const dias=[]; for(let i=0;i<7;i++){const d=new Date(lunes);d.setDate(lunes.getDate()+i);dias.push(d);}
-  const todasHoras=new Set(); dias.forEach(d=>getTurno(d).horas.forEach(h=>todasHoras.add(h)));
-  const horasOrd=[...todasHoras].sort();
-  const tStr=dateStr(today);
-  const grid=document.getElementById('vistaSemana'); grid.innerHTML='';
-  const wg=document.createElement('div'); wg.className='week-grid'; grid.appendChild(wg);
-  const corner=document.createElement('div'); corner.className='week-header'; wg.appendChild(corner);
-  dias.forEach(d=>{const h=document.createElement('div');const dStr2=dateStr(d);const t=getTurno(d);h.className='week-header'+(dStr2===tStr?' today-col':'');h.innerHTML=DIAS_ES[d.getDay()]+'<br><strong style="font-size:13px">'+d.getDate()+'</strong><br><span style="font-size:10px">'+TURNO_ICONS[t.tipo]+'</span>';wg.appendChild(h);});
-  horasOrd.forEach(hora=>{
-    const tl=document.createElement('div'); tl.className='week-cell time-col'; tl.textContent=hora; wg.appendChild(tl);
+function renderSemana(){
+  const dow=selectedDate.getDay(),diff=dow===0?-6:1-dow;
+  const lunes=new Date(selectedDate);lunes.setDate(selectedDate.getDate()+diff);
+  const dias=[];for(let i=0;i<7;i++){const d=new Date(lunes);d.setDate(lunes.getDate()+i);dias.push(d);}
+  const todasH=new Set();dias.forEach(d=>getTurno(d).horas.forEach(h=>todasH.add(h)));
+  const hOrd=[...todasH].sort((a,b)=>horaNum(a)-horaNum(b));
+  const tS=dateStr(today),g=document.getElementById('vSem');g.innerHTML='';
+  const wg=document.createElement('div');wg.className='week-grid';
+  wg.style.gridTemplateColumns='60px '+Array(7).fill('1fr').join(' ');
+  g.appendChild(wg);
+  const corner=document.createElement('div');corner.className='week-header';wg.appendChild(corner);
+  dias.forEach(d=>{
+    const dS=dateStr(d),t=getTurno(d);
+    const h=document.createElement('div');
+    h.className='week-header'+(dS===tS?' today-col':'');
+    h.innerHTML=`${DIAS[d.getDay()]}<br><strong style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300">${d.getDate()}</strong><br><span style="font-size:10px">${TURNO_ICONS[t.tipo]}</span>`;
+    wg.appendChild(h);
+  });
+  hOrd.forEach(hora=>{
+    const tl=document.createElement('div');tl.className='week-cell time-col';tl.textContent=hora;wg.appendChild(tl);
     dias.forEach(d=>{
-      const cell=document.createElement('div'); cell.className='week-cell';
-      const dStr2=dateStr(d); const turno=getTurno(d);
+      const cell=document.createElement('div');cell.className='week-cell';
+      const dS=dateStr(d),turno=getTurno(d);
       if(!turno.horas.includes(hora)){cell.classList.add('bloqueada');}
-      else {
-        const cita=citas.find(c=>c.fecha===dStr2&&c.hora===hora);
-        if(cita){const b=document.createElement('div');b.className='week-cita';b.textContent=cita.nombre;b.title=cita.servicio;b.onclick=e=>{e.stopPropagation();editarCitaAdmin(cita.id);};cell.appendChild(b);}
-        else{cell.onclick=()=>{selectedDate=new Date(d);currentView='dia';openModalAdmin(hora);};}
+      else{
+        const cita=citas.find(c=>c.fecha===dS&&c.hora===hora);
+        if(cita){const b=document.createElement('div');b.className='week-cita';b.textContent=cita.nombre;b.onclick=e=>{e.stopPropagation();editarCita(cita.id);};cell.appendChild(b);}
+        else cell.onclick=()=>{selectedDate=new Date(d);currentView='dia';openModalAdmin(hora);};
       }
       wg.appendChild(cell);
     });
   });
   const fin=dias[6];
-  document.getElementById('fechaTitle').textContent=lunes.getDate()+' '+MESES_ES[lunes.getMonth()]+' – '+fin.getDate()+' '+MESES_ES[fin.getMonth()];
+  document.getElementById('fTitle').textContent=lunes.getDate()+' '+MESES[lunes.getMonth()]+' – '+fin.getDate()+' '+MESES[fin.getMonth()];
   const total=citas.filter(c=>{const d=parseDate(c.fecha);return d>=lunes&&d<=fin;}).length;
-  document.getElementById('fechaSubtitle').textContent=total===0?'Sin citas esta semana':total+' cita'+(total!==1?'s':'')+' esta semana';
+  document.getElementById('fSub').textContent=total===0?'Sin citas esta semana':total+' cita'+(total!==1?'s':'')+' esta semana';
 }
 
-// ─── MODAL ADMIN ──────────────────────────────────────────────────
-window.openModalAdmin = function(hora='', id=null) {
-  editId=id; selServicioAdmin=null; selHoraAdmin=hora||null;
-  document.getElementById('modalTitulo').textContent=id?'Editar cita':'Nueva cita';
-  const btnEl=document.getElementById('btnEliminarModal');
-  if(btnEl) btnEl.style.display=id?'inline-block':'none';
-  if(id){
-    const cita=citas.find(c=>c.id===id);
-    if(cita){selServicioAdmin=cita.servicio;selHoraAdmin=cita.hora;document.getElementById('fNombre').value=cita.nombre;document.getElementById('fTelefono').value=cita.telefono||'';document.getElementById('fFecha').value=cita.fecha;document.getElementById('fNotas').value=cita.notas||'';}
-  } else {
-    document.getElementById('fNombre').value='';document.getElementById('fTelefono').value='';
-    document.getElementById('fFecha').value=dateStr(selectedDate);document.getElementById('fNotas').value='';
-  }
-  buildServiciosAdmin(); actualizarHorasModal();
-  document.getElementById('modalOverlay').classList.remove('hidden');
-  setTimeout(()=>document.getElementById('fNombre').focus(),100);
+// ── MODAL ADMIN ───────────────────────────────────────────────
+window.openModalAdmin=function(h=''){
+  editId=null;
+  const dS=dateStr(selectedDate),turno=getTurno(selectedDate);
+  const hOpt=turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(x=>`<option value="${x}"${x===h?' selected':''}>${x}</option>`).join('');
+  const sOpt=SERVICIOS.map(s=>`<option value="${s.nombre}">${s.nombre}</option>`).join('');
+  document.getElementById('modalContent').innerHTML=`
+  <h3 class="modal-title">Nueva cita</h3>
+  <div class="modal-row"><label class="inp-label">Nombre</label><input class="inp" id="mN" placeholder="Nombre del cliente"></div>
+  <div class="modal-row"><label class="inp-label">Teléfono</label><input class="inp" id="mT" placeholder="+56 9 xxxx xxxx" inputmode="tel"></div>
+  <div class="modal-row"><label class="inp-label">Servicio</label><select class="inp" id="mS">${sOpt}</select></div>
+  <div class="modal-row"><label class="inp-label">Hora</label>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select class="inp" id="mH" style="flex:1" onchange="syncHoraCustom(this.value)">${hOpt}<option value="custom">✎ Ingresar hora personalizada...</option></select>
+      <input class="inp" type="time" id="mHcustom" style="width:110px;display:none" oninput="document.getElementById('mH').value='custom'">
+    </div>
+  </div>
+  <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="mF" value="${dS}"></div>
+  <div class="modal-row"><label class="inp-label">Notas</label><input class="inp" id="mNt" placeholder="Opcional"></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="guardarCitaAdmin()">Guardar</button></div>`;
+  document.getElementById('modalBg').classList.add('open');
 };
-window.closeModal = function(){document.getElementById('modalOverlay').classList.add('hidden');editId=null;};
-window.closeModalOutside = function(e){if(e.target===document.getElementById('modalOverlay'))closeModal();};
-
-function buildServiciosAdmin() {
-  const g=document.getElementById('adminServiciosGrid'); g.innerHTML='';
-  SERVICIOS.forEach(s=>{const e=document.createElement('div');e.className='servicio-pill'+(selServicioAdmin===s.nombre?' selected':'');e.textContent=s.nombre;e.onclick=()=>{selServicioAdmin=s.nombre;buildServiciosAdmin();};g.appendChild(e);});
-}
-window.actualizarHorasModal = function() {
-  const fv=document.getElementById('fFecha').value; if(!fv) return;
-  const date=parseDate(fv); const turno=getTurno(date);
-  const citasFecha=citas.filter(c=>c.fecha===fv&&(!editId||c.id!==editId));
-  const cont=document.getElementById('horaOptions'); cont.innerHTML='';
-  if(turno.tipo==='dia'){cont.innerHTML='<span style="font-size:12px;color:var(--text-muted);font-family:sans-serif">🌞 Sin horarios disponibles este día.</span>';return;}
-  turno.horas.forEach(h=>{
-    const ocupada=citasFecha.some(c=>c.hora===h);
-    const pill=document.createElement('div');
-    pill.className='hora-pill'+(ocupada?' ocupada':selHoraAdmin===h?' selected':'');
-    pill.textContent=h;
-    if(!ocupada){pill.onclick=()=>{selHoraAdmin=h;actualizarHorasModal();};}
-    cont.appendChild(pill);
-  });
+window.editarCita=function(id){
+  const c=citas.find(x=>x.id===id);if(!c)return;editId=id;
+  const turno=getTurno(parseDate(c.fecha));
+  const hOpt=turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(x=>`<option value="${x}"${x===c.hora?' selected':''}>${x}</option>`).join('');
+  const sOpt=SERVICIOS.map(s=>`<option value="${s.nombre}"${s.nombre===c.servicio?' selected':''}>${s.nombre}</option>`).join('');
+  document.getElementById('modalContent').innerHTML=`
+  <h3 class="modal-title">Editar cita</h3>
+  <div class="modal-row"><label class="inp-label">Nombre</label><input class="inp" id="mN" value="${c.nombre||''}"></div>
+  <div class="modal-row"><label class="inp-label">Teléfono</label><input class="inp" id="mT" value="${c.telefono||''}"></div>
+  <div class="modal-row"><label class="inp-label">Servicio</label><select class="inp" id="mS">${sOpt}</select></div>
+  <div class="modal-row"><label class="inp-label">Hora</label>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select class="inp" id="mH" style="flex:1" onchange="syncHoraCustom(this.value)">${hOpt}<option value="custom">✎ Ingresar hora personalizada...</option></select>
+      <input class="inp" type="time" id="mHcustom" style="width:110px;${!turno.horas.includes(c.hora)?'':'display:none'}" value="${!turno.horas.includes(c.hora)?c.hora:''}" oninput="document.getElementById('mH').value='custom'">
+    </div>
+  </div>
+  <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="mF" value="${c.fecha}"></div>
+  <div class="modal-row"><label class="inp-label">Notas</label><input class="inp" id="mNt" value="${c.notas||''}"></div>
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="guardarCitaAdmin()">Actualizar</button></div>`;
+  document.getElementById('modalBg').classList.add('open');
 };
-
-window.guardarCitaAdmin = async function() {
-  const nombre=document.getElementById('fNombre').value.trim();
-  const fecha=document.getElementById('fFecha').value;
-  if(!nombre){showToast('Ingresa el nombre');return;}
-  if(!fecha){showToast('Selecciona fecha');return;}
-  if(!selHoraAdmin){showToast('Selecciona hora');return;}
-  if(!selServicioAdmin){showToast('Selecciona servicio');return;}
-  const conflict=citas.find(c=>c.fecha===fecha&&c.hora===selHoraAdmin&&(!editId||c.id!==editId));
-  if(conflict){showToast('Horario ya ocupado');return;}
-  const datos={nombre,telefono:document.getElementById('fTelefono').value.trim(),fecha,hora:selHoraAdmin,servicio:selServicioAdmin,notas:document.getElementById('fNotas').value.trim(),origen:'admin'};
-  if(editId){await db.collection('citas').doc(editId).set(datos);}
-  else{await db.collection('citas').add(datos);}
-  closeModal(); selectedDate=parseDate(fecha);
-  showToast(editId?'Cita actualizada':'Cita guardada ✓');
+window.guardarCitaAdmin=async function(){
+  const nombre=document.getElementById('mN').value.trim(),fecha=document.getElementById('mF').value;
+  const horaRaw=document.getElementById('mH').value;
+  const horaCustom=document.getElementById('mHcustom')?.value||'';
+  const hora=horaRaw==='custom'?horaCustom:horaRaw;
+  const servicio=document.getElementById('mS').value,tel=document.getElementById('mT').value.trim(),notas=document.getElementById('mNt').value.trim();
+  if(!nombre||!fecha||!hora){showToast('Completa los campos obligatorios');return;}
+  if(horaRaw==='custom'&&!horaCustom){showToast('Ingresa la hora personalizada');return;}
+  if(citas.find(c=>c.fecha===fecha&&c.hora===hora&&c.id!==editId)){showToast('Ese horario ya está ocupado');return;}
+  try{
+    const data={nombre,fecha,hora,servicio,telefono:tel,notas,creadoEn:new Date().toISOString()};
+    if(editId)await db.collection('citas').doc(editId).update(data);
+    else await db.collection('citas').add(data);
+    showToast(editId?'Cita actualizada':'Cita agendada');closeModal();
+  }catch(e){showToast('Error al guardar');}
 };
-window.editarCitaAdmin = function(id){openModalAdmin('',id);};
-window.eliminarDesdModal = async function(){
-  if(!editId) return;
-  if(!confirm('¿Eliminar esta cita?')) return;
-  await db.collection('citas').doc(editId).delete();
-  closeModal(); showToast('Cita eliminada');
-};
-window.eliminarCita = async function(id){
-  if(!confirm('¿Eliminar esta cita?')) return;
-  await db.collection('citas').doc(id).delete();
-  showToast('Cita eliminada');
+window.eliminarCita=async function(id){
+  if(!confirm('¿Eliminar esta cita?'))return;
+  await db.collection('citas').doc(id).delete();showToast('Cita eliminada');
 };
 
-// ════════════════════════════════════════════════════════════════
-// VISTA CLIENTE
-// ════════════════════════════════════════════════════════════════
-function renderCliente() {
-  const root=document.getElementById('appRoot');
-  const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
-  const tStr=dateStr(today);
-  const sStr=dateStr(clienteSelFecha);
+// ── CONFIG HORARIOS ───────────────────────────────────────────
+window.abrirConfigHorarios=function(){
+  const tipos=CICLO.filter(t=>t.tipo!=='dia');
+  document.getElementById('modalContent').innerHTML=`
+  <h3 class="modal-title">Configurar horarios</h3>
+  <p style="font-size:12px;color:var(--ink-muted);margin-bottom:1.5rem;line-height:1.6">Define los horarios disponibles para cada tipo de turno.</p>
+  ${tipos.map(turno=>`
+  <div class="turno-cfg">
+    <div class="turno-cfg-title">${TURNO_ICONS[turno.tipo]} ${turno.nombre}</div>
+    <div class="horas-config-grid" id="hg-${turno.tipo}">
+      ${turno.horas.sort((a,b)=>horaNum(a)-horaNum(b)).map(h=>`<div class="hora-tag" id="ht-${turno.tipo}-${h.replace(':','')}">${h}<button class="rm" onclick="qH('${turno.tipo}','${h}')">×</button></div>`).join('')}
+    </div>
+    <div class="add-hora-row">
+      <input class="inp" type="time" id="nh-${turno.tipo}" style="width:120px;padding:7px 10px">
+      <button class="btn btn-sm" onclick="aH('${turno.tipo}')">Agregar</button>
+    </div>
+  </div>`).join('')}
+  <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="guardarHoras()">Guardar cambios</button></div>`;
+  document.getElementById('modalBg').classList.add('open');
+};
+window.qH=function(tipo,hora){CICLO.find(t=>t.tipo===tipo).horas=CICLO.find(t=>t.tipo===tipo).horas.filter(h=>h!==hora);document.getElementById(`ht-${tipo}-${hora.replace(':','')}`)?.remove();};
+window.aH=function(tipo){
+  const inp=document.getElementById(`nh-${tipo}`);const val=inp.value;if(!val)return;
+  const[hh,mm]=val.split(':');const hora=`${hh}:${mm}`;
+  const turno=CICLO.find(t=>t.tipo===tipo);
+  if(turno.horas.includes(hora)){showToast('Esa hora ya existe');return;}
+  turno.horas.push(hora);
+  const tag=document.createElement('div');tag.className='hora-tag';tag.id=`ht-${tipo}-${hora.replace(':','')}`;
+  tag.innerHTML=`${hora}<button class="rm" onclick="qH('${tipo}','${hora}')">×</button>`;
+  document.getElementById(`hg-${tipo}`).appendChild(tag);inp.value='';
+};
+window.guardarHoras=async function(){
+  try{await db.collection('config').doc('horarios').set({ciclo:CICLO,actualizado:new Date().toISOString()});showToast('Horarios guardados ✓');closeModal();renderAdmin();}
+  catch(e){showToast('Error al guardar');}
+};
+window.closeModal=function(){document.getElementById('modalBg').classList.remove('open');};
+window.syncHoraCustom=function(val){
+  const inp=document.getElementById('mHcustom');
+  if(!inp)return;
+  if(val==='custom'){inp.style.display='';inp.focus();}
+  else inp.style.display='none';
+};
 
-  // Calcular los próximos 7 días con atención (no turno día)
-  const diasDisponibles=[];
-  let cursor=new Date(today);
-  while(diasDisponibles.length<7){
-    const t=getTurno(cursor);
-    if(t.tipo!=='dia') diasDisponibles.push(dateStr(cursor));
-    cursor.setDate(cursor.getDate()+1);
+// ══════════════════════════════════════════════════════════════
+// CLIENTE
+// ══════════════════════════════════════════════════════════════
+function renderCliente(){
+  if(!citasLoaded){document.getElementById('appRoot').innerHTML=`<div class="loading-screen"><div class="spinner"></div><div class="loading-txt">Cargando horarios</div></div>`;return;}
+  if(miCitaId){const c=citas.find(x=>x.id===miCitaId);if(c&&c.fecha>=dateStr(today)){renderMiCita(c);return;}else{miCitaId=null;localStorage.removeItem('skinlux_mi_cita');}}
+  // Próximos 7 días disponibles
+  const dias7=[];let cur=new Date(today);
+  while(dias7.length<7){
+    const t=getTurno(cur),cD=citas.filter(c=>c.fecha===dateStr(cur)),lib=t.horas.filter(h=>!cD.some(c=>c.hora===h));
+    if(t.tipo!=='dia'&&lib.length>0)dias7.push(new Date(cur));
+    cur.setDate(cur.getDate()+1);if(dias7.length===0&&cur-today>60*24*60*60*1000)break;
   }
-
-  // Si clienteSelFecha no está en los 7 días, seleccionar el primero
-  if(!diasDisponibles.includes(sStr)){
-    clienteSelFecha=parseDate(diasDisponibles[0]);
-  }
-  const sStrFinal=dateStr(clienteSelFecha);
-
-  // Construir botones de días (horizontal scroll)
-  let diasHTML=diasDisponibles.map(dStr2=>{
-    const dt=parseDate(dStr2);
-    const citasD=citas.filter(c=>c.fecha===dStr2);
-    const turno=getTurno(dt);
-    const horasLibres=turno.horas.filter(h=>!citasD.some(c=>c.hora===h));
-    const esHoy=dStr2===tStr;
-    const esSel=dStr2===sStrFinal;
-    const tieneDisp=horasLibres.length>0;
-    return `<button class="dia-btn${esSel?' sel':''}" onclick="clienteSelDia('${dStr2}')">
-      <span class="dia-btn-dow">${DIAS_ES[dt.getDay()]}</span>
-      <span class="dia-btn-num">${dt.getDate()}</span>
-      <span class="dia-btn-mes">${MESES_ES[dt.getMonth()].slice(0,3)}</span>
-      ${esHoy?'<span class="dia-btn-hoy">hoy</span>':''}
-      ${tieneDisp?'<span class="dia-btn-dot"></span>':''}
-    </button>`;
-  }).join('');
-
-  // Horas del día seleccionado
-  const turnoSel=getTurno(clienteSelFecha);
-  const citasSelFecha=citas.filter(c=>c.fecha===sStrFinal);
-  let horasHTML='';
-  turnoSel.horas.forEach(h=>{
-    const cita=citasSelFecha.find(c=>c.hora===h);
-    const esMia=cita&&cita.id===miCitaId;
-    if(esMia){horasHTML+=`<div class="hora-btn mi-cita">${h}<br><span style="font-size:10px">Tu cita ✓</span></div>`;}
-    else if(cita){horasHTML+=`<div class="hora-btn ocupada">${h}</div>`;}
-    else{horasHTML+=`<div class="hora-btn" onclick="clienteSelHoraFn('${h}')">${h}</div>`;}
-  });
-  if(!horasHTML) horasHTML='<p style="font-size:13px;color:var(--text-muted);font-family:sans-serif">Sin horarios disponibles este día.</p>';
-
-  // Mi cita card
-  let miCitaHTML='';
-  if(miCita){
-    const d=parseDate(miCita.fecha);
-    miCitaHTML=`<div class="mi-cita-card">
-      <h3>Tu cita reservada</h3>
-      <p><strong>${DIAS_ES[d.getDay()]} ${d.getDate()} de ${MESES_ES[d.getMonth()]}</strong> a las <strong>${miCita.hora}</strong></p>
-      <p style="font-size:13px;color:var(--text-soft)">${miCita.servicio} · ${miCita.nombre}</p>
-      <button class="cancel-btn" onclick="cancelarMiCita()">Cancelar mi cita</button>
-    </div>`;
-  }
-
-  // Formulario reserva
-  let formHTML='';
-  if(clienteSelHora&&!miCita){
-    const serviciosOpts=SERVICIOS.map(s=>`<div class="servicio-pill${clienteSelServicio===s.nombre?' selected':''}" onclick="clienteSelServicioFn('${s.nombre}')">${s.nombre}</div>`).join('');
-    formHTML=`<div class="reserva-form">
-      <h3>Reservar las ${clienteSelHora} del ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</h3>
-      <div class="form-group"><label class="form-label">Tu nombre</label><input class="form-input" id="cNombre" type="text" placeholder="Nombre completo"></div>
-      <div class="form-group"><label class="form-label">Tu teléfono</label><input class="form-input" id="cTelefono" type="tel" placeholder="+56 9 ..."></div>
-      <div class="form-group"><label class="form-label">Servicio</label><div class="servicios-grid">${serviciosOpts}</div></div>
-      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="confirmarReserva()">Confirmar reserva</button>
-    </div>`;
-  }
-
-  root.innerHTML=`<div class="cliente-wrap">
-    ${miCitaHTML}
-    <p style="font-size:11px;color:var(--text-muted);font-family:sans-serif;text-align:center;margin-bottom:12px;letter-spacing:0.06em;text-transform:uppercase">Próximos días disponibles</p>
-    <div class="dias-scroll">${diasHTML}</div>
-    <div class="cliente-day-title" style="margin-top:1.25rem">${DIAS_ES[clienteSelFecha.getDay()]} ${clienteSelFecha.getDate()} de ${MESES_ES[clienteSelFecha.getMonth()]}</div>
-    <div class="horas-grid">${horasHTML}</div>
-    ${formHTML}
+  if(!dias7.find(d=>dateStr(d)===dateStr(cFecha)))cFecha=dias7[0]||today;
+  const turnoSel=getTurno(cFecha),citasSel=citas.filter(c=>c.fecha===dateStr(cFecha)),hSel=turnoSel.horas.sort((a,b)=>horaNum(a)-horaNum(b));
+  document.getElementById('appRoot').innerHTML=`
+  <div class="cliente-wrap">
+    <div class="booking-intro">
+      <div class="booking-eyebrow">Agenda online</div>
+      <h1 class="booking-title">Reserva tu experiencia Skin Lux</h1>
+      <p class="booking-subtitle">Selecciona un servicio para consultar su valor y ver la disponibilidad en tiempo real.</p>
+    </div>
+    <div class="steps">
+      ${[1,2,3].map(i=>`<div class="step${i===cStep?' active':i<cStep?' done':''}"></div>`).join('')}
+    </div>
+    ${cStep===1?`
+    <div class="reserva-grid">
+      <section class="reserva-panel">
+        <div class="section-h">1. Elige un servicio</div>
+        <div class="servicios-list">
+          ${SERVICIOS.map(s=>`
+          <div class="servicio-card${cServicio===s.nombre?' selected':''}" onclick="sServ('${s.nombre}')">
+            <div><div class="serv-nombre">${s.nombre}</div><div class="serv-dur">${s.duracion}</div></div>
+            <div style="display:flex;align-items:center;gap:8px"><span class="serv-precio">${s.precio}</span>${cServicio===s.nombre?'<span class="serv-check">✓</span>':''}</div>
+          </div>`).join('')}
+        </div>
+      </section>
+      <section class="reserva-panel">
+        ${!cServicio?`<div class="reserva-placeholder">Selecciona un servicio a la izquierda para ver los días y horarios disponibles.</div>`:`
+        <div class="section-h">2. Elige un día</div>
+        <div class="dias-scroll">
+          ${dias7.map(d=>{const cD=citas.filter(c=>c.fecha===dateStr(d));const t=getTurno(d);const lib=t.horas.some(h=>!cD.some(c=>c.hora===h));
+            return`<button class="dia-btn${dateStr(d)===dateStr(cFecha)?' selected':''}" onclick="sDia('${dateStr(d)}')"><span class="dia-nom">${DIAS[d.getDay()]}</span><span class="dia-num">${d.getDate()}</span>${lib?'<span class="dia-dot"></span>':''}</button>`;}).join('')}
+        </div>
+        <div class="section-h" style="font-size:15px;margin-bottom:.75rem">Horarios · ${cFecha.getDate()} de ${MESES[cFecha.getMonth()]}</div>
+        <div class="horas-grid">
+          ${hSel.length===0?'<p style="font-size:13px;color:var(--ink-muted);grid-column:1/-1;font-style:italic">Sin horarios este día.</p>':
+            hSel.map(h=>{const oc=citasSel.some(c=>c.hora===h);return`<button class="hora-btn${h===cHora?' selected':''}${oc?' ocupada':''}" onclick="${oc?'':` ` + `sHora('${h}')`}">${h}</button>`;}).join('')}
+        </div>
+        ${cHora?`<button class="btn btn-primary" style="width:100%;padding:13px;margin-top:.5rem" onclick="cStep=2;renderCliente()">Continuar →</button>`:''}
+        `}
+      </section>
+    </div>
+    `:''}
+    ${cStep===2?`
+    <div style="max-width:540px;margin:0 auto">
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:1rem;padding-left:0" onclick="cStep=1;renderCliente()">← Volver</button>
+    <div class="section-h">Tus datos</div>
+    <div class="form-group"><label class="inp-label">Nombre completo</label><input class="inp" id="cN" placeholder="Tu nombre" value="${window._cN||''}"></div>
+    <div class="form-group"><label class="inp-label">Teléfono</label><input class="inp" id="cT" placeholder="+56 9 xxxx xxxx" inputmode="tel" value="${window._cT||''}"></div>
+    <div class="form-group"><label class="inp-label">Email <span style="color:var(--brown)">*</span></label><input class="inp" id="cE" placeholder="Te llegará la confirmación de tu cita" type="email" value="${window._cE||''}"></div>
+    <button class="btn btn-primary" style="width:100%;padding:13px;margin-top:.5rem" onclick="avanzar3()">Revisar reserva →</button>
+    </div>
+    `:''}
+    ${cStep===3?`
+    <div style="max-width:540px;margin:0 auto">
+    <button class="btn btn-ghost btn-sm" style="margin-bottom:1rem;padding-left:0" onclick="cStep=2;renderCliente()">← Volver</button>
+    <div class="section-h">Confirma tu reserva</div>
+    <div class="confirm-box">
+      <div class="confirm-row"><span class="confirm-lbl">Día</span><span class="confirm-val">${DIASL[cFecha.getDay()]}, ${cFecha.getDate()} de ${MESES[cFecha.getMonth()]}</span></div>
+      <div class="confirm-row"><span class="confirm-lbl">Hora</span><span class="confirm-val">${cHora}</span></div>
+      <div class="confirm-sep"></div>
+      <div class="confirm-row"><span class="confirm-lbl">Servicio</span><span class="confirm-val">${cServicio}</span></div>
+      <div class="confirm-row"><span class="confirm-lbl">Valor a pagar</span><span class="confirm-val" style="font-size:18px;color:var(--gold)">${SERVICIOS.find(s=>s.nombre===cServicio)?.precio||'—'}</span></div>
+      <div style="font-size:10px;color:var(--ink-muted);text-align:right;margin-top:2px">Pago con débito o crédito</div>
+      <div class="confirm-sep"></div>
+      <div class="confirm-row"><span class="confirm-lbl">Nombre</span><span class="confirm-val">${window._cN||''}</span></div>
+      <div class="confirm-row"><span class="confirm-lbl">Teléfono</span><span class="confirm-val">${window._cT||'—'}</span></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:13px" id="btnConf" onclick="confirmarCita()">Confirmar reserva</button>
+    </div>
+    `:''}
   </div>`;
 }
-
-window.clienteSelDia = function(dStr) {
-  clienteSelFecha=parseDate(dStr); clienteSelHora=null; clienteSelServicio=null; renderCliente();
+window.sDia=function(dS){cFecha=parseDate(dS);cHora=null;renderCliente();};
+window.sHora=function(h){cHora=h;renderCliente();};
+window.sServ=function(s){if(cServicio!==s)cHora=null;cServicio=s;renderCliente();};
+window.avanzar3=function(){
+  const n=document.getElementById('cN').value.trim();if(!n){showToast('Ingresa tu nombre');return;}
+  const e=document.getElementById('cE').value.trim();
+  if(!e){showToast('Ingresa tu email para recibir la confirmación');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){showToast('Email inválido');return;}
+  window._cN=n;window._cT=document.getElementById('cT').value.trim();window._cE=e;
+  cStep=3;renderCliente();
 };
-window.clienteCambiarMes = function(dir) { clienteCalView.setMonth(clienteCalView.getMonth()+dir); renderCliente(); };
-window.clienteSelHoraFn = function(h) {
-  const miCita=miCitaId?citas.find(c=>c.id===miCitaId):null;
-  if(miCita){showToast('Ya tienes una cita reservada');return;}
-  clienteSelHora=h; clienteSelServicio=null; renderCliente();
-  setTimeout(()=>document.querySelector('.reserva-form')?.scrollIntoView({behavior:'smooth'}),100);
+window.confirmarCita=async function(){
+  const btn=document.getElementById('btnConf');btn.disabled=true;btn.textContent='Agendando...';
+  if(citas.find(c=>c.fecha===dateStr(cFecha)&&c.hora===cHora)){showToast('Ese horario ya fue tomado, elige otro');cStep=1;cHora=null;renderCliente();return;}
+  try{
+    const precio=SERVICIOS.find(s=>s.nombre===cServicio)?.precio||'';
+    const data={nombre:window._cN,telefono:window._cT,email:window._cE||'',fecha:dateStr(cFecha),hora:cHora,servicio:cServicio,precio,creadoEn:new Date().toISOString()};
+    const ref=await db.collection('citas').add(data);
+    miCitaId=ref.id;localStorage.setItem('skinlux_mi_cita',ref.id);
+    // Email a Javi (notificación)
+    try{await emailjs.send("service_r73o47s","template_smf6n3r",{nombre_cliente:data.nombre,fecha:data.fecha,hora:data.hora,servicio:data.servicio,valor:data.precio,telefono:data.telefono||'—',email:"javicarmonaortiz@gmail.com"});}catch(e){console.error('email javi:',e);}
+    // Email de confirmación al cliente
+    if(data.email){
+      try{await emailjs.send("service_r73o47s","template_smf6n3r",{nombre_cliente:data.nombre,fecha:data.fecha,hora:data.hora,servicio:data.servicio,valor:data.precio,telefono:data.telefono||'—',email:data.email});}catch(e){console.error('email cliente:',e);}
+    }
+    showToast('¡Reserva confirmada!');cStep=1;cHora=null;cServicio=null;renderCliente();
+  }catch(e){btn.disabled=false;btn.textContent='Confirmar reserva';showToast('Error al agendar');}
 };
-window.clienteSelServicioFn = function(s) {
-  clienteSelServicio=s;
-  // Solo actualizar los pills sin re-renderizar el formulario completo
-  document.querySelectorAll('.servicio-pill').forEach(el => {
-    el.classList.toggle('selected', el.textContent.trim() === s);
-  });
+function renderMiCita(c){
+  const d=parseDate(c.fecha);
+  document.getElementById('appRoot').innerHTML=`
+  <div class="cliente-wrap">
+    <div class="mi-cita-card">
+      <div class="mi-cita-title">Tu reserva está confirmada</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ink-soft)">
+        <div><strong style="color:var(--ink)">${DIASL[d.getDay()]}, ${d.getDate()} de ${MESES[d.getMonth()]}</strong></div>
+        <div>${c.hora} &nbsp;·&nbsp; ${c.servicio}</div>
+        <div>Valor a pagar: <strong style="font-size:17px;color:var(--gold)">${c.precio||SERVICIOS.find(s=>s.nombre===c.servicio)?.precio||'—'}</strong></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--ink-muted);margin-bottom:1.5rem;line-height:1.7">¿Necesitas cancelar o cambiar tu hora? Escríbenos directamente.</p>
+    <button class="btn" style="width:100%;margin-bottom:10px" onclick="cancelarMiCita()">Cancelar mi reserva</button>
+    <a href="https://skin-lux.cl" class="btn btn-primary" style="display:block;text-align:center;text-decoration:none">Volver a Skin Lux</a>
+  </div>`;
+}
+window.cancelarMiCita=async function(){
+  if(!confirm('¿Cancelar tu reserva?'))return;
+  if(miCitaId)await db.collection('citas').doc(miCitaId).delete();
+  miCitaId=null;localStorage.removeItem('skinlux_mi_cita');renderCliente();
 };
-
-window.confirmarReserva = async function() {
-  const nombre=document.getElementById('cNombre')?.value.trim();
-  const tel=document.getElementById('cTelefono')?.value.trim();
-  if(!nombre){showToast('Ingresa tu nombre');return;}
-  if(!clienteSelServicio){showToast('Selecciona un servicio');return;}
-  const conflict=citas.find(c=>c.fecha===dateStr(clienteSelFecha)&&c.hora===clienteSelHora);
-  if(conflict){showToast('Esa hora ya fue reservada, elige otra');clienteSelHora=null;renderCliente();return;}
-  const fechaGuardada=dateStr(clienteSelFecha);
-  const horaGuardada=clienteSelHora;
-  const servicioGuardado=clienteSelServicio;
-
-  const ref=await db.collection('citas').add({nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
-  miCitaId=ref.id; localStorage.setItem('skinlux_mi_cita',ref.id);
-
-  // Actualizar citas localmente de inmediato (sin esperar Firebase listener)
-  citas.push({id:ref.id,nombre,telefono:tel,fecha:fechaGuardada,hora:horaGuardada,servicio:servicioGuardado,notas:'',origen:'cliente'});
-
-  // Datos para notificaciones
-  const fechaStr=clienteSelFecha.getDate()+' de '+MESES_ES[clienteSelFecha.getMonth()];
-  const hora=horaGuardada;
-  const servicio=servicioGuardado;
-
-  // Email automático a Javi via EmailJS
-  // Construir fecha ISO para Zapier → Google Calendar
-  const fechaISO = fechaGuardada + 'T' + horaGuardada + ':00';
-  const [hh, mm] = horaGuardada.split(':').map(Number);
-  const fechaISOFin = fechaGuardada + 'T' + String(hh+1).padStart(2,'0') + ':' + String(mm).padStart(2,'0') + ':00';
-
-  emailjs.send("service_r73o47s", "template_smf6n3r", {
-    nombre: nombre,
-    telefono: tel || "No indicado",
-    fecha: fechaStr,
-    hora: hora,
-    servicio: servicio,
-    fecha_iso: fechaISO,
-    fecha_iso_fin: fechaISOFin,
-    name: nombre,
-    email: "javicarmonaortiz@gmail.com"
-  }).then(() => {
-    console.log("Email enviado a Javi");
-  }).catch(err => {
-    console.error("Error email:", err);
-  });
-
-  // WhatsApp al cliente
-  if(tel){
-    const telLimpio=tel.replace(/[^0-9]/g,'');
-    const waMsg=encodeURIComponent('Hola '+nombre+'! 🌸 Tu cita en SKIN LUX by Javiera ha sido confirmada.\n\n📅 Fecha: '+fechaStr+'\n🕐 Hora: '+hora+'\n✨ Servicio: '+servicio+'\n\nTe esperamos! Cualquier consulta escríbenos. 💕');
-    setTimeout(()=>window.open('https://wa.me/56'+telLimpio+'?text='+waMsg,'_blank'),1000);
-  }
-
-  clienteSelHora=null; showToast('¡Cita reservada! ✓'); renderCliente();
-};
-
-window.cancelarMiCita = async function() {
-  if(!confirm('¿Segura que quieres cancelar tu cita?')) return;
-  await db.collection('citas').doc(miCitaId).delete();
-  localStorage.removeItem('skinlux_mi_cita'); miCitaId=null;
-  showToast('Cita cancelada'); renderCliente();
-};
-
-// Render inicial
-renderCliente();
 </script>
 </body>
 </html>
