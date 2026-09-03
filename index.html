@@ -679,8 +679,9 @@ function renderCliente(){
         ${!cServicio?`<div class="reserva-placeholder">Selecciona un servicio a la izquierda para ver los días y horarios disponibles.</div>`:`
         <div class="section-h">2. Elige un día</div>
         <div class="dias-scroll">
-          ${dias7.map(d=>{const cD=citas.filter(c=>c.fecha===dateStr(d));const lib=horasFecha(d).some(h=>!cD.some(c=>c.hora===h));
-            return`<button class="dia-btn${dateStr(d)===dateStr(cFecha)?' selected':''}" onclick="sDia('${dateStr(d)}')"><span class="dia-nom">${DIAS[d.getDay()]}</span><span class="dia-num">${d.getDate()}</span>${lib?'<span class="dia-dot"></span>':''}</button>`;}).join('')}
+          ${dias7.length?dias7.map(d=>{const cD=citas.filter(c=>c.fecha===dateStr(d));const lib=horasFecha(d).some(h=>!cD.some(c=>c.hora===h));
+            return`<button class="dia-btn${dateStr(d)===dateStr(cFecha)?' selected':''}" onclick="sDia('${dateStr(d)}')"><span class="dia-nom">${DIAS[d.getDay()]}</span><span class="dia-num">${d.getDate()}</span>${lib?'<span class="dia-dot"></span>':''}</button>`;}).join('')
+            :'<p style="font-size:13px;color:var(--ink-muted);font-style:italic;padding:.5rem 0">No hay fechas disponibles por el momento.</p>'}
         </div>
         <div class="section-h" style="font-size:15px;margin-bottom:.75rem">Horarios · ${cFecha.getDate()} de ${MESES[cFecha.getMonth()]}</div>
         <div class="horas-grid">
