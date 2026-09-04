@@ -751,12 +751,8 @@ window.confirmarCita=async function(){
       fecha:data.fecha,hora:data.hora,servicio:data.servicio,
       valor:data.precio,precio:data.precio,telefono:data.telefono||'—'
     });
-    // Email a Javi (notificación)
+    // Email a Javi; EmailJS envía automáticamente la plantilla vinculada al cliente.
     try{await emailjs.send("service_r73o47s","template_smf6n3r",emailParams("javicarmonaortiz@gmail.com","Javiera"));}catch(e){console.error('email javi:',e);}
-    // Email de confirmación al cliente
-    if(data.email){
-      try{await emailjs.send("service_r73o47s","template_smf6n3r",emailParams(data.email,data.nombre));}catch(e){console.error('email cliente:',e);}
-    }
     showToast('¡Reserva confirmada!');cStep=1;cHora=null;cServicio=null;renderCliente();
   }catch(e){btn.disabled=false;btn.textContent='Confirmar reserva';showToast('Error al agendar');}
 };
