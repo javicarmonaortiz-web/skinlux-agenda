@@ -830,7 +830,7 @@ window.confirmarCita=async function(){
     const ref=await db.collection('citas').add(data);
     miCitaId=ref.id;localStorage.setItem('skinlux_mi_cita',ref.id);
     const emailParams=(destino,destinatario)=>({
-      to_email:destino,email:destino,user_email:destino,reply_to:data.email,
+      to_email:destino,email:data.email,user_email:data.email,reply_to:data.email,
       to_name:destinatario,name:data.nombre,from_name:data.nombre,
       nombre:data.nombre,nombre_cliente:data.nombre,cliente:data.nombre,
       fecha:data.fecha,hora:data.hora,servicio:data.servicio,
