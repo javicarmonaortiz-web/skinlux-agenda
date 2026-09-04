@@ -57,6 +57,11 @@ header {
 .spinner { width: 24px; height: 24px; border: 1.5px solid var(--border); border-top-color: var(--brown); border-radius: 50%; animation: spin .9s linear infinite; }
 .loading-txt { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.reservando-bg { position: fixed; inset: 0; z-index: 700; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(42,31,24,.46); backdrop-filter: blur(5px); }
+.reservando-card { min-width: 190px; padding: 28px 30px; border-radius: 16px; background: var(--white); box-shadow: 0 22px 60px rgba(42,31,24,.22); display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.reservando-card .spinner { width: 34px; height: 34px; border-width: 2px; }
+.reservando-card strong { font: 400 20px 'Cormorant Garamond',serif; }
+.reservando-card span { color: var(--ink-muted); font-size: 11px; text-align: center; }
 
 /* ADMIN LAYOUT */
 .app { display: grid; grid-template-columns: 256px 1fr; min-height: calc(100vh - 60px); }
@@ -261,18 +266,45 @@ header {
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 @media (max-width: 640px) {
-  .app { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
-  .main { padding: 1.25rem; }
-  .cliente-wrap { padding: 1.5rem 1rem; }
+  body { font-size: 15px; }
+  .app { display: block; }
+  .sidebar { display: flex; border-right: 0; border-bottom: 1px solid var(--border); padding: 1rem; gap: 1rem; max-height: none; }
+  .main { padding: 1rem .85rem 2rem; }
+  .cliente-wrap { padding: 1.25rem .75rem 2rem; }
   .reserva-grid { grid-template-columns: 1fr; }
-  header { padding: 0 .85rem; }
+  header { padding: 0 .7rem; height: 56px; }
   .badge { display: none; }
   .back-link { font-size: 0; }
   .back-link::after { content: '← Sitio'; font-size: 11px; }
-  .logo-main { font-size: 17px; }
-  .logo-sub { font-size: 12px; }
-  .reserva-panel { padding: 1rem; }
+  .header-right { gap: 5px; }
+  .logo-main { font-size: 16px; }
+  .logo-sub { font-size: 11px; }
+  .booking-intro { margin-bottom: 1.15rem; }
+  .booking-title { font-size: 32px; }
+  .booking-subtitle { font-size: 13px; }
+  .steps { margin-bottom: 1.25rem; }
+  .reserva-panel { padding: 1rem .85rem; border-radius: 10px; }
+  .servicio-card { padding: 13px 12px; gap: 8px; }
+  .serv-nombre { font-size: 13px; }
+  .serv-precio { margin-left: 4px; font-size: 15px; }
+  .dia-btn { min-width: 57px; padding: 9px 11px; }
+  .dias-scroll { margin-bottom: 1.35rem; }
+  .horas-grid { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 7px; }
+  .hora-btn { min-height: 47px; padding: 11px 4px; font-size: 17px; }
+  .inp { min-height: 46px; font-size: 16px; }
+  .btn-primary { min-height: 46px; }
+  .confirm-row { gap: 12px; }
+  .confirm-val { max-width: 64%; }
+  .modal-bg { align-items: flex-end; }
+  .modal { max-width: none; max-height: 92dvh; padding: 1.4rem 1rem calc(1.4rem + env(safe-area-inset-bottom)); border-radius: 18px 18px 0 0; }
+  .modal-actions { position: sticky; bottom: 0; padding-top: 10px; background: var(--white); }
+  .modal-actions .btn { flex: 1; min-height: 44px; }
+  .main-header { flex-direction: column; gap: 12px; }
+  .main-actions { width: 100%; flex-wrap: wrap; }
+  .view-tabs { flex: 1; }
+  .view-tab { flex: 1; }
+  .week-wrap { overflow-x: auto; }
+  .hora-wheel-card { padding: 18px; }
 }
 </style>
 
@@ -346,7 +378,7 @@ let modo='cliente', adminAuth=false;
 let today=new Date(); today.setHours(0,0,0,0);
 let selectedDate=new Date(today), calViewDate=new Date(today.getFullYear(),today.getMonth(),1);
 let currentView='dia', citas=[], citasLoaded=false, editId=null;
-let cStep=1, cFecha=new Date(today), cHora=null, cServicio=null;
+let cStep=1, cFecha=new Date(today), cHora=null, cServicio=null, RESERVANDO=false;
 
 // Rueda propia en formato 24 horas. Su aspecto y comportamiento no dependen
 // del selector nativo del sistema operativo ni de la configuración regional.
@@ -753,7 +785,7 @@ function renderCliente(){
     <div class="form-group"><label class="inp-label">Nombre completo</label><input class="inp" id="cN" placeholder="Tu nombre" value="${window._cN||''}"></div>
     <div class="form-group"><label class="inp-label">Teléfono</label><input class="inp" id="cT" placeholder="+56 9 xxxx xxxx" inputmode="tel" value="${window._cT||''}"></div>
     <div class="form-group"><label class="inp-label">Email <span style="color:var(--brown)">*</span></label><input class="inp" id="cE" placeholder="Te llegará la confirmación de tu cita" type="email" value="${window._cE||''}"></div>
-    <button class="btn btn-primary" style="width:100%;padding:13px;margin-top:.5rem" onclick="avanzar3()">Revisar reserva →</button>
+    <button class="btn btn-primary" style="width:100%;padding:13px;margin-top:.5rem" onclick="avanzar3()">Reservar hora →</button>
     </div>
     `:''}
     ${cStep===3?`
@@ -771,7 +803,7 @@ function renderCliente(){
       <div class="confirm-row"><span class="confirm-lbl">Nombre</span><span class="confirm-val">${window._cN||''}</span></div>
       <div class="confirm-row"><span class="confirm-lbl">Teléfono</span><span class="confirm-val">${window._cT||'—'}</span></div>
     </div>
-    <button class="btn btn-primary" style="width:100%;padding:13px" id="btnConf" onclick="confirmarCita()">Confirmar reserva</button>
+    <button class="btn btn-primary" style="width:100%;padding:13px" id="btnConf" onclick="confirmarCita()">Reservar hora</button>
     </div>
     `:''}
   </div>`;
@@ -788,8 +820,10 @@ window.avanzar3=function(){
   cStep=3;renderCliente();
 };
 window.confirmarCita=async function(){
-  const btn=document.getElementById('btnConf');btn.disabled=true;btn.textContent='Agendando...';
-  if(citas.find(c=>c.fecha===dateStr(cFecha)&&c.hora===cHora)){showToast('Ese horario ya fue tomado, elige otro');cStep=1;cHora=null;renderCliente();return;}
+  if(RESERVANDO)return;RESERVANDO=true;
+  const btn=document.getElementById('btnConf');btn.disabled=true;btn.textContent='Reservando…';
+  const espera=document.createElement('div');espera.id='reservandoBg';espera.className='reservando-bg';espera.innerHTML='<div class="reservando-card"><div class="spinner"></div><strong>Reservando…</strong><span>Estamos confirmando tu hora.<br>No cierres esta ventana.</span></div>';document.body.appendChild(espera);
+  if(citas.find(c=>c.fecha===dateStr(cFecha)&&c.hora===cHora)){RESERVANDO=false;document.getElementById('reservandoBg')?.remove();showToast('Ese horario ya fue tomado, elige otro');cStep=1;cHora=null;renderCliente();return;}
   try{
     const precio=SERVICIOS.find(s=>s.nombre===cServicio)?.precio||'';
     const data={nombre:window._cN,telefono:window._cT,email:window._cE||'',fecha:dateStr(cFecha),hora:cHora,servicio:cServicio,precio,creadoEn:new Date().toISOString()};
@@ -804,8 +838,8 @@ window.confirmarCita=async function(){
     });
     // Email a Javi; EmailJS envía automáticamente la plantilla vinculada al cliente.
     try{await emailjs.send("service_r73o47s","template_smf6n3r",emailParams("javicarmonaortiz@gmail.com","Javiera"));}catch(e){console.error('email javi:',e);}
-    showToast('¡Reserva confirmada!');cStep=1;cHora=null;cServicio=null;renderCliente();
-  }catch(e){btn.disabled=false;btn.textContent='Confirmar reserva';showToast('Error al agendar');}
+    RESERVANDO=false;document.getElementById('reservandoBg')?.remove();showToast('¡Reserva confirmada!');cStep=1;cHora=null;cServicio=null;renderCliente();
+  }catch(e){RESERVANDO=false;document.getElementById('reservandoBg')?.remove();btn.disabled=false;btn.textContent='Reservar hora';showToast('Error al agendar');}
 };
 function renderMiCita(c){
   const d=parseDate(c.fecha);
