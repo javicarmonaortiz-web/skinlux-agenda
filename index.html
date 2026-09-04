@@ -218,6 +218,22 @@ header {
 .modal-row { margin-bottom: 14px; }
 .modal-actions { display: flex; gap: 8px; margin-top: 1.5rem; justify-content: flex-end; }
 
+/* SELECTOR DE HORA TIPO RUEDA — IGUAL EN SAFARI MAC, IPAD Y IPHONE */
+.hora24-trigger { min-width: 132px; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 7px; background: var(--white); color: var(--ink); font: 400 14px 'Jost',sans-serif; cursor: pointer; }
+.hora24-trigger:hover,.hora24-trigger:focus { outline: none; border-color: var(--brown); }
+.hora-wheel-bg { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(42,31,24,.48); backdrop-filter: blur(5px); }
+.hora-wheel-card { width: min(360px,100%); padding: 22px; border-radius: 22px; background: rgba(255,255,255,.96); box-shadow: 0 24px 70px rgba(42,31,24,.25); }
+.hora-wheel-title { text-align: center; margin-bottom: 14px; font: 400 22px 'Cormorant Garamond',serif; }
+.hora-wheel-columns { position: relative; display: grid; grid-template-columns: 1fr 20px 1fr; align-items: center; }
+.hora-wheel-columns::after { content: ''; position: absolute; left: 0; right: 0; top: 88px; height: 44px; z-index: 0; border-radius: 12px; background: rgba(120,70,45,.10); pointer-events: none; }
+.hora-wheel-sep { z-index: 2; text-align: center; font-size: 25px; }
+.hora-wheel { height: 220px; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; mask-image: linear-gradient(transparent,#000 25%,#000 75%,transparent); -webkit-mask-image: linear-gradient(transparent,#000 25%,#000 75%,transparent); }
+.hora-wheel::-webkit-scrollbar { display: none; }
+.hora-wheel-pad { height: 88px; }
+.hora-wheel button { display: block; width: 100%; height: 44px; border: 0; background: transparent; color: var(--ink-muted); font: 300 19px 'Jost',sans-serif; scroll-snap-align: center; cursor: pointer; }
+.hora-wheel button.selected { position: relative; z-index: 2; color: var(--ink); font-size: 25px; font-weight: 400; }
+.hora-wheel-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
 /* CONFIG HORARIOS */
 .horas-config-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
 .hora-tag { display: flex; align-items: center; gap: 5px; background: var(--cream); border: 1px solid var(--border); border-radius: 5px; padding: 5px 10px; font-size: 12px; color: var(--ink-soft); }
@@ -331,6 +347,40 @@ let today=new Date(); today.setHours(0,0,0,0);
 let selectedDate=new Date(today), calViewDate=new Date(today.getFullYear(),today.getMonth(),1);
 let currentView='dia', citas=[], citasLoaded=false, editId=null;
 let cStep=1, cFecha=new Date(today), cHora=null, cServicio=null;
+
+// Rueda propia en formato 24 horas. Su aspecto y comportamiento no dependen
+// del selector nativo del sistema operativo ni de la configuración regional.
+function selectorHora24(id,valor='',oculto=false){
+  const [horaSel='',minSel='']=valor.split(':');
+  return `<div id="${id}-wrap" style="display:${oculto?'none':'flex'};align-items:center">
+    <button type="button" class="hora24-trigger" id="${id}-display" onclick="abrirRuedaHora('${id}')">${valor||'Seleccionar hora'}</button>
+    <input type="hidden" id="${id}-hh" value="${horaSel}"><input type="hidden" id="${id}-mm" value="${minSel}">
+  </div>`;
+}
+function valorHora24(id){
+  const hh=document.getElementById(`${id}-hh`)?.value||'';
+  const mm=document.getElementById(`${id}-mm`)?.value||'';
+  return hh!==''&&mm!==''?`${hh}:${mm}`:'';
+}
+let RUEDA_ID='',RUEDA_HORA='09',RUEDA_MINUTO='00';
+window.abrirRuedaHora=function(id){
+  RUEDA_ID=id;RUEDA_HORA=document.getElementById(`${id}-hh`)?.value||'09';RUEDA_MINUTO=document.getElementById(`${id}-mm`)?.value||'00';
+  const opciones=(tipo,total,sel)=>`<div class="hora-wheel-pad"></div>${Array.from({length:total},(_,i)=>{const v=String(i).padStart(2,'0');return `<button type="button" class="${v===sel?'selected':''}" onclick="elegirRuedaHora('${tipo}','${v}',this)">${v}</button>`}).join('')}<div class="hora-wheel-pad"></div>`;
+  const fondo=document.createElement('div');fondo.id='horaWheelBg';fondo.className='hora-wheel-bg';
+  fondo.innerHTML=`<div class="hora-wheel-card" role="dialog" aria-modal="true" aria-label="Seleccionar hora en formato 24 horas"><div class="hora-wheel-title">Seleccionar hora · 24 horas</div><div class="hora-wheel-columns"><div class="hora-wheel" id="ruedaHoras">${opciones('h',24,RUEDA_HORA)}</div><div class="hora-wheel-sep">:</div><div class="hora-wheel" id="ruedaMinutos">${opciones('m',60,RUEDA_MINUTO)}</div></div><div class="hora-wheel-actions"><button type="button" class="btn" onclick="cerrarRuedaHora()">Cancelar</button><button type="button" class="btn btn-primary" onclick="confirmarRuedaHora()">Aceptar</button></div></div>`;
+  fondo.addEventListener('click',e=>{if(e.target===fondo)cerrarRuedaHora()});document.body.appendChild(fondo);
+  requestAnimationFrame(()=>fondo.querySelectorAll('.selected').forEach(x=>x.scrollIntoView({block:'center'})));
+};
+window.elegirRuedaHora=function(tipo,valor,boton){
+  if(tipo==='h')RUEDA_HORA=valor;else RUEDA_MINUTO=valor;
+  boton.parentElement.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));boton.classList.add('selected');boton.scrollIntoView({behavior:'smooth',block:'center'});
+};
+window.cerrarRuedaHora=function(){document.getElementById('horaWheelBg')?.remove();};
+window.confirmarRuedaHora=function(){
+  document.getElementById(`${RUEDA_ID}-hh`).value=RUEDA_HORA;document.getElementById(`${RUEDA_ID}-mm`).value=RUEDA_MINUTO;
+  document.getElementById(`${RUEDA_ID}-display`).textContent=`${RUEDA_HORA}:${RUEDA_MINUTO}`;
+  if(RUEDA_ID==='mHcustom')document.getElementById('mH').value='custom';cerrarRuedaHora();
+};
 let miCitaId=localStorage.getItem('skinlux_mi_cita')||null;
 
 // ── HELPERS ───────────────────────────────────────────────────
@@ -545,7 +595,7 @@ window.openModalAdmin=function(h=''){
   <div class="modal-row"><label class="inp-label">Hora</label>
     <div style="display:flex;gap:8px;align-items:center">
       <select class="inp" id="mH" style="flex:1" onchange="syncHoraCustom(this.value)">${hOpt}<option value="custom">✎ Ingresar hora personalizada...</option></select>
-      <input class="inp" type="time" id="mHcustom" style="width:110px;display:none" oninput="document.getElementById('mH').value='custom'">
+      ${selectorHora24('mHcustom','',true)}
     </div>
   </div>
   <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="mF" value="${dS}"></div>
@@ -566,7 +616,7 @@ window.editarCita=function(id){
   <div class="modal-row"><label class="inp-label">Hora</label>
     <div style="display:flex;gap:8px;align-items:center">
       <select class="inp" id="mH" style="flex:1" onchange="syncHoraCustom(this.value)">${hOpt}<option value="custom">✎ Ingresar hora personalizada...</option></select>
-      <input class="inp" type="time" id="mHcustom" style="width:110px;${!horas.includes(c.hora)?'':'display:none'}" value="${!horas.includes(c.hora)?c.hora:''}" oninput="document.getElementById('mH').value='custom'">
+      ${selectorHora24('mHcustom',!horas.includes(c.hora)?c.hora:'',horas.includes(c.hora))}
     </div>
   </div>
   <div class="modal-row"><label class="inp-label">Fecha</label><input class="inp" type="date" id="mF" value="${c.fecha}"></div>
@@ -577,7 +627,7 @@ window.editarCita=function(id){
 window.guardarCitaAdmin=async function(){
   const nombre=document.getElementById('mN').value.trim(),fecha=document.getElementById('mF').value;
   const horaRaw=document.getElementById('mH').value;
-  const horaCustom=document.getElementById('mHcustom')?.value||'';
+  const horaCustom=valorHora24('mHcustom');
   const hora=horaRaw==='custom'?horaCustom:horaRaw;
   const servicio=document.getElementById('mS').value,tel=document.getElementById('mT').value.trim(),notas=document.getElementById('mNt').value.trim();
   if(!nombre||!fecha||!hora){showToast('Completa los campos obligatorios');return;}
@@ -609,7 +659,7 @@ window.abrirConfigHorarios=function(fecha=''){
       ${CONFIG_HORAS.length?CONFIG_HORAS.map(h=>`<div class="hora-tag" id="ht-fecha-${h.replace(':','')}">${h}<button class="rm" onclick="qH('${h}')">×</button></div>`).join(''):'<span id="sinHorasCfg" style="font-size:12px;color:var(--ink-muted)">Todavía no hay horarios.</span>'}
     </div>
     <div class="add-hora-row">
-      <input class="inp" type="time" id="nh-fecha" style="width:120px;padding:7px 10px">
+      ${selectorHora24('nh-fecha')}
       <button class="btn btn-sm" onclick="aH()">Agregar hora</button>
     </div>
   </div>
@@ -619,14 +669,15 @@ window.abrirConfigHorarios=function(fecha=''){
 window.cambiarFechaConfig=function(fecha){abrirConfigHorarios(fecha);};
 window.qH=function(hora){CONFIG_HORAS=CONFIG_HORAS.filter(h=>h!==hora);document.getElementById(`ht-fecha-${hora.replace(':','')}`)?.remove();if(!CONFIG_HORAS.length)document.getElementById('hg-fecha').innerHTML='<span id="sinHorasCfg" style="font-size:12px;color:var(--ink-muted)">Todavía no hay horarios.</span>';};
 window.aH=function(){
-  const inp=document.getElementById('nh-fecha');const val=inp.value;if(!val)return;
+  const val=valorHora24('nh-fecha');if(!val){showToast('Selecciona hora y minutos');return;}
   const[hh,mm]=val.split(':');const hora=`${hh}:${mm}`;
   if(CONFIG_HORAS.includes(hora)){showToast('Esa hora ya existe');return;}
   CONFIG_HORAS.push(hora);CONFIG_HORAS.sort((a,b)=>horaNum(a)-horaNum(b));
   document.getElementById('sinHorasCfg')?.remove();
   const tag=document.createElement('div');tag.className='hora-tag';tag.id=`ht-fecha-${hora.replace(':','')}`;
   tag.innerHTML=`${hora}<button class="rm" onclick="qH('${hora}')">×</button>`;
-  document.getElementById('hg-fecha').appendChild(tag);inp.value='';
+  document.getElementById('hg-fecha').appendChild(tag);
+  document.getElementById('nh-fecha-hh').value='';document.getElementById('nh-fecha-mm').value='';document.getElementById('nh-fecha-display').textContent='Seleccionar hora';
 };
 window.guardarHoras=async function(){
   try{if(CONFIG_HORAS.length)DISPONIBILIDAD[CONFIG_FECHA]=[...CONFIG_HORAS];else delete DISPONIBILIDAD[CONFIG_FECHA];await db.collection('citas').doc('config_horarios').set({disponibilidad:DISPONIBILIDAD,fecha:'0000-00-00',hora:'00:00',tipo:'configuracion',actualizado:new Date().toISOString()});selectedDate=parseDate(CONFIG_FECHA);showToast('Disponibilidad guardada ✓');closeModal();renderAdmin();}
@@ -634,7 +685,7 @@ window.guardarHoras=async function(){
 };
 window.closeModal=function(){document.getElementById('modalBg').classList.remove('open');};
 window.syncHoraCustom=function(val){
-  const inp=document.getElementById('mHcustom');
+  const inp=document.getElementById('mHcustom-wrap');
   if(!inp)return;
   if(val==='custom'){inp.style.display='';inp.focus();}
   else inp.style.display='none';
